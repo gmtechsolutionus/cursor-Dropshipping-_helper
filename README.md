@@ -7,6 +7,8 @@ A TypeScript library for creating structured task sequences for Cursor AI agents
 
 ## 🎥 Quick Demo
 
+[![Cursor Agent Demo](https://img.youtube.com/vi/-8CYVtsvBkg/0.jpg)](https://www.youtube.com/watch?v=-8CYVtsvBkg)
+
 ![Cursor Agent Demo](https://raw.githubusercontent.com/zalab-inc/cursor_agent/main/screenshot/cursor-agent.gif)
 
 ## Installation
