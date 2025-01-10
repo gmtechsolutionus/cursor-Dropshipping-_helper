@@ -10,7 +10,8 @@
   "scripts": {
     "build": "tsc",
     "test": "jest",
-    "prepublishOnly": "pnpm run build"
+    "prepublishOnly": "pnpm run build && pnpm test",
+    "prepare": "pnpm run build"
   },
   "keywords": [
     "cursor",
@@ -21,14 +22,22 @@
   ],
   "author": "Jacky",
   "license": "MIT",
-  "dependencies": {
-    "cursor-agent": "github:zalab-inc/cursor_agent"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zalab-inc/cursor_agent"
   },
+  "bugs": {
+    "url": "https://github.com/zalab-inc/cursor_agent/issues"
+  },
+  "homepage": "https://github.com/zalab-inc/cursor_agent#readme",
   "devDependencies": {
     "@types/jest": "^29.5.14",
     "@types/node": "^20.0.0",
     "jest": "^29.5.0",
     "ts-jest": "^29.1.0",
     "typescript": "^5.0.0"
+  },
+  "peerDependencies": {
+    "typescript": ">=4.0.0"
   }
 }

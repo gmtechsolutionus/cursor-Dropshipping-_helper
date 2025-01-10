@@ -209,3 +209,35 @@ export function createParallelApplyTask(
 export function createTaskSequence(tasks: Task[]): TaskSequence {
 	return { tasks };
 }
+
+// Commons command
+export const commands = {
+	file_analysis: "Analyze the file.",
+	file_issues: "Find issues in the file.",
+	file_refactor: "Refactor the file.",
+	file_improve: "Improve the file.",
+	file_optimize: "Optimize the file.",
+	file_debug: "Debug the file.",
+
+	// Think Related
+	think_deep: "Think deeply about the file.",
+	think_refactor: "Think about refactoring the file.",
+	think_improve: "Think about improving the file.",
+	think_optimize: "Think about optimizing the file.",
+
+	// sequence related
+	do_in_sequence: "Do the sequence of tasks.",
+	do_in_parallel: "Do the tasks in parallel.",
+
+	// suggestion related
+	suggest_next_task: "Suggest the next task.",
+	suggest_idea: "Suggest an idea.",
+
+	// plan related
+	plan_task: "Plan the task.",
+	plan_improve: "Plan the improvement.",
+
+	// bug related
+	bug_find: "Find potential bugs in the file.",
+	bug_fix: "Fix the bugs in the file.",
+};
