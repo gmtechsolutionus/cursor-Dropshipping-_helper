@@ -1,6 +1,6 @@
 {
   "name": "cursor-agent",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Task sequence creator for Cursor AI agents",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
