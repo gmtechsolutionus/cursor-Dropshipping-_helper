@@ -3,11 +3,11 @@
 
 A TypeScript library for creating structured task sequences for Cursor AI agents. This library provides type-safe builders for creating complex task sequences that can be used with Cursor AI.
 
-> **Key Advantage**: This package closely mirrors the internal methods used by Cursor AI's system behind the scenes. By utilizing the same task structures and patterns that Cursor AI uses internally ([see internal tool structure](agents/tool_call.json) and [detailed documentation](docs/tools.mdx)), your task sequences will generate highly effective and optimized prompts that align perfectly with Cursor AI's capabilities.
+> **Key Advantage**: This package closely mirrors the internal methods used by Cursor AI's system behind the scenes. By utilizing the same task structures and patterns that Cursor AI uses internally (see internal tool structure and detailed documentation), your task sequences will generate highly effective and optimized prompts that align perfectly with Cursor AI's capabilities.
 
 ## 🎥 Quick Demo
 
-![Cursor Agent Demo](screenshot/cursor-agent.gif)
+![Cursor Agent Demo](https://raw.githubusercontent.com/zalab-inc/cursor_agent/main/screenshot/cursor-agent.gif)
 
 ## Installation
 
@@ -85,27 +85,27 @@ my-project/
 ```
 
 ### 2. Visual Examples
-![Example 1](screenshot/image.png)
+![Example 1](https://raw.githubusercontent.com/zalab-inc/cursor_agent/main/screenshot/image.png)
   
 ### 3. Open Cursor Composer
 Use Cmd/Ctrl + Shift + B to open the Composer
-![Example 2](screenshot/image1.png)
+![Example 2](https://raw.githubusercontent.com/zalab-inc/cursor_agent/main/screenshot/image1.png)
 
 ### 4. Switch to Agent Mode
 Make sure "Agent" mode is selected
-![Example 2](screenshot/image2.png)
+![Example 2](https://raw.githubusercontent.com/zalab-inc/cursor_agent/main/screenshot/image2.png)
 
 ### 5. Attach Task File
-![Example 2](screenshot/image3.png)
+![Example 2](https://raw.githubusercontent.com/zalab-inc/cursor_agent/main/screenshot/image3.png)
 Click the attachment icon or drag and drop your task file
 
 ### 6. Execute Task
-![Example 2](screenshot/image4.png)
+![Example 2](https://raw.githubusercontent.com/zalab-inc/cursor_agent/main/screenshot/image4.png)
 Type your prompt: "please do this @my-task.ts"
 
 
 ### 7. Done!, Iterate or attach another task
-![Example 2](screenshot/image5.png)
+![Example 2](https://raw.githubusercontent.com/zalab-inc/cursor_agent/main/screenshot/image5.png)
 
 
 ## Usage
