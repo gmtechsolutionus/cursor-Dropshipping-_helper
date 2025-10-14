@@ -353,64 +353,6 @@ export function ProductAnalysisDisplay({ analysis }: ProductAnalysisDisplayProps
         </CardContent>
       </Card>
 
-      {/* Top-Rated Products Section */}
-      {topRatedProducts && topRatedProducts.products && topRatedProducts.products.length > 0 && (
-        <Card>
-          <CardHeader>
-            <CardTitle>⭐ {t.topRatedProducts}</CardTitle>
-            <CardDescription>{t.topRatedProductsDesc}</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
-              {topRatedProducts.products.map((product: any, index: number) => (
-                <a 
-                  key={index} 
-                  href={product.product_url} 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="border rounded-lg overflow-hidden hover:shadow-lg transition-shadow bg-card"
-                >
-                  <div className="aspect-square relative bg-gray-100 dark:bg-gray-800">
-                    <img 
-                      src={product.image_url || 'https://via.placeholder.com/150'} 
-                      alt={product.product_name}
-                      className="w-full h-full object-cover"
-                      onError={(e) => {
-                        e.currentTarget.src = 'https://via.placeholder.com/150?text=Product';
-                      }}
-                    />
-                  </div>
-                  <div className="p-3 space-y-2">
-                    <h4 className="font-medium text-sm line-clamp-2 hover:text-primary">
-                      {product.product_name}
-                    </h4>
-                    <div className="flex items-center justify-between">
-                      <p className="text-xl font-bold text-primary">
-                        ${product.price.toFixed(2)}
-                      </p>
-                      <Badge variant="secondary" className="text-xs">
-                        {product.platform}
-                      </Badge>
-                    </div>
-                    <div className="flex items-center justify-between text-xs">
-                      <div className="flex items-center gap-1">
-                        <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
-                        <span>{product.rating} ({(product.reviews_count / 1000).toFixed(1)}k)</span>
-                      </div>
-                      {product.shipping_info && (
-                        <span className="text-muted-foreground truncate">
-                          {product.shipping_info.includes('Free') ? '📦 ' + t.freeShipping : product.shipping_info}
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                </a>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      )}
-
       {/* Product Image */}
       {analysis.product_image && (
         <Card>
@@ -545,6 +487,64 @@ export function ProductAnalysisDisplay({ analysis }: ProductAnalysisDisplayProps
                 <h4 className="font-medium mb-2">📅 {t.seasonalTrends}</h4>
                 <p className="text-muted-foreground">{analysis.market_analysis.seasonal_trends}</p>
               </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Top-Rated Products Section */}
+      {topRatedProducts && topRatedProducts.products && topRatedProducts.products.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle>⭐ {t.topRatedProducts}</CardTitle>
+            <CardDescription>{t.topRatedProductsDesc}</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+              {topRatedProducts.products.map((product: any, index: number) => (
+                <a 
+                  key={index} 
+                  href={product.product_url} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="border rounded-lg overflow-hidden hover:shadow-lg transition-shadow bg-card"
+                >
+                  <div className="aspect-square relative bg-gray-100 dark:bg-gray-800">
+                    <img 
+                      src={product.image_url || 'https://via.placeholder.com/150'} 
+                      alt={product.product_name}
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        e.currentTarget.src = 'https://via.placeholder.com/150?text=Product';
+                      }}
+                    />
+                  </div>
+                  <div className="p-3 space-y-2">
+                    <h4 className="font-medium text-sm line-clamp-2 hover:text-primary">
+                      {product.product_name}
+                    </h4>
+                    <div className="flex items-center justify-between">
+                      <p className="text-xl font-bold text-primary">
+                        ${product.price.toFixed(2)}
+                      </p>
+                      <Badge variant="secondary" className="text-xs">
+                        {product.platform}
+                      </Badge>
+                    </div>
+                    <div className="flex items-center justify-between text-xs">
+                      <div className="flex items-center gap-1">
+                        <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
+                        <span>{product.rating} ({(product.reviews_count / 1000).toFixed(1)}k)</span>
+                      </div>
+                      {product.shipping_info && (
+                        <span className="text-muted-foreground truncate">
+                          {product.shipping_info.includes('Free') ? '📦 ' + t.freeShipping : product.shipping_info}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </a>
+              ))}
             </div>
           </CardContent>
         </Card>
