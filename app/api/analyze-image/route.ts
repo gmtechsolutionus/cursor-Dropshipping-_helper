@@ -1,22 +1,29 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { analyzeProductImage } from '@/lib/xai';
+import { analyzeProductImage, analyzeProductByName } from '@/lib/xai';
 import { ProductAnalysis } from '@/types';
 
 export const runtime = 'edge';
 
 export async function POST(request: NextRequest) {
   try {
-    const { imageBase64 } = await request.json();
+    const { imageBase64, productName } = await request.json();
 
-    if (!imageBase64) {
+    if (!imageBase64 && !productName) {
       return NextResponse.json(
-        { error: 'No image provided' },
+        { error: 'Please provide either an image or product name' },
         { status: 400 }
       );
     }
 
-    // Call xAI API to analyze the image
-    const analysisResult = await analyzeProductImage(imageBase64);
+    let analysisResult: string | null = null;
+
+    if (imageBase64) {
+      // Call xAI API to analyze the image
+      analysisResult = await analyzeProductImage(imageBase64);
+    } else if (productName) {
+      // Call xAI API to analyze by product name
+      analysisResult = await analyzeProductByName(productName);
+    }
 
     if (!analysisResult) {
       throw new Error('Failed to get analysis from xAI');

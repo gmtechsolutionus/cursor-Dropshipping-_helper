@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { ImageUpload } from '@/components/image-upload';
+import { ProductInput } from '@/components/product-input';
 import { ProductAnalysisDisplay } from '@/components/product-analysis-display';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -17,46 +17,66 @@ export default function Dashboard() {
   const [activeTab, setActiveTab] = useState('analyze');
   const { theme, setTheme } = useTheme();
 
-  const handleImageUpload = async (file: File) => {
+  const handleProductAnalyze = async (data: { image?: File; productName?: string }) => {
     setIsAnalyzing(true);
-    const toastId = toast.loading('Analyzing product image...');
+    const toastId = toast.loading(data.image ? 'Analyzing product image...' : 'Analyzing product...');
 
     try {
-      // Convert file to base64
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      
-      reader.onload = async () => {
-        const base64 = reader.result?.toString().split(',')[1];
+      if (data.image) {
+        // Handle image upload
+        const reader = new FileReader();
+        reader.readAsDataURL(data.image);
         
-        if (!base64) {
-          throw new Error('Failed to convert image to base64');
-        }
+        reader.onload = async () => {
+          const base64 = reader.result?.toString().split(',')[1];
+          
+          if (!base64) {
+            throw new Error('Failed to convert image to base64');
+          }
 
+          const response = await fetch('/api/analyze-image', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ imageBase64: base64 }),
+          });
+
+          if (!response.ok) {
+            throw new Error('Failed to analyze image');
+          }
+
+          const analysisData = await response.json();
+          setProductAnalysis(analysisData);
+          toast.success('Product analyzed successfully!', { id: toastId });
+          setActiveTab('results');
+        };
+
+        reader.onerror = () => {
+          throw new Error('Failed to read image file');
+        };
+      } else if (data.productName) {
+        // Handle text-based analysis
         const response = await fetch('/api/analyze-image', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ imageBase64: base64 }),
+          body: JSON.stringify({ productName: data.productName }),
         });
 
         if (!response.ok) {
-          throw new Error('Failed to analyze image');
+          throw new Error('Failed to analyze product');
         }
 
-        const data = await response.json();
-        setProductAnalysis(data);
+        const analysisData = await response.json();
+        setProductAnalysis(analysisData);
         toast.success('Product analyzed successfully!', { id: toastId });
         setActiveTab('results');
-      };
-
-      reader.onerror = () => {
-        throw new Error('Failed to read image file');
-      };
+      }
     } catch (error) {
-      console.error('Error analyzing image:', error);
-      toast.error('Failed to analyze image. Please try again.', { id: toastId });
+      console.error('Error analyzing product:', error);
+      toast.error('Failed to analyze product. Please try again.', { id: toastId });
     } finally {
       setIsAnalyzing(false);
     }
@@ -97,17 +117,10 @@ export default function Dashboard() {
           </TabsList>
 
           <TabsContent value="analyze" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Upload Product Image</CardTitle>
-                <CardDescription>
-                  Upload a product image to get instant AI-powered analysis, pricing, and supplier recommendations
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <ImageUpload onImageUpload={handleImageUpload} isUploading={isAnalyzing} />
-              </CardContent>
-            </Card>
+            <ProductInput 
+              onAnalyze={handleProductAnalyze} 
+              isAnalyzing={isAnalyzing} 
+            />
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {features.map((feature, index) => (

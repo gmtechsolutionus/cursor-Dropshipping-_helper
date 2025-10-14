@@ -92,3 +92,47 @@ export async function generateWithGrok(prompt: string) {
 
   return response.choices[0].message.content;
 }
+
+export async function analyzeProductByName(productName: string) {
+  const prompt = `Analyze the product "${productName}" for dropshipping. Research and provide comprehensive information about this product including brand, model, key features, materials, typical dimensions, and suggest dropshipping suppliers/pricing from major platforms like AliExpress/Amazon. 
+
+  Output in JSON format with the following structure:
+  {
+    "product_name": "string",
+    "description": "string",
+    "features_list": ["string"],
+    "specs": {
+      "brand": "string",
+      "model": "string",
+      "material": "string",
+      "dimensions": "string",
+      "weight": "string",
+      "color": "string"
+    },
+    "estimated_price_usd": {
+      "min": number,
+      "max": number,
+      "average": number
+    },
+    "affiliate_links": [
+      {
+        "platform": "string",
+        "url": "string",
+        "price": number
+      }
+    ],
+    "supplier_options": [
+      {
+        "name": "string",
+        "platform": "string",
+        "price": number,
+        "shipping_time": "string",
+        "rating": number,
+        "reviews_count": number,
+        "url": "string"
+      }
+    ]
+  }`;
+
+  return await generateWithGrok(prompt);
+}
