@@ -44,9 +44,9 @@ export function ProductInput({ onAnalyze, isAnalyzing }: ProductInputProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Analyze Product</CardTitle>
+        <CardTitle>{t.analyzeProduct}</CardTitle>
         <CardDescription>
-          Upload a product image or enter a product name for AI-powered analysis
+          {t.uploadImage} {t.orEnterName}
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -54,11 +54,11 @@ export function ProductInput({ onAnalyze, isAnalyzing }: ProductInputProps) {
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="upload">
               <Upload className="w-4 h-4 mr-2" />
-              Upload Image
+              {t.uploadImage}
             </TabsTrigger>
             <TabsTrigger value="search">
               <Search className="w-4 h-4 mr-2" />
-              Search by Name
+              {t.orEnterName}
             </TabsTrigger>
           </TabsList>
           
@@ -76,18 +76,18 @@ export function ProductInput({ onAnalyze, isAnalyzing }: ProductInputProps) {
                 size="lg"
               >
                 <Sparkles className="w-4 h-4 mr-2" />
-                {isAnalyzing ? 'Analyzing...' : 'Analyze Image'}
+                {isAnalyzing ? t.analyzing : t.analyzeButton}
               </Button>
             )}
           </TabsContent>
           
           <TabsContent value="search" className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="product-name">Product Name</Label>
+              <Label htmlFor="product-name">{t.orEnterName}</Label>
               <Input
                 id="product-name"
                 type="text"
-                placeholder="e.g., iPhone 15 Pro Max, Nike Air Max 90, Sony WH-1000XM5"
+                placeholder={t.productNamePlaceholder}
                 value={productName}
                 onChange={(e) => setProductName(e.target.value)}
                 onKeyPress={(e) => {
@@ -97,9 +97,6 @@ export function ProductInput({ onAnalyze, isAnalyzing }: ProductInputProps) {
                 }}
                 disabled={isAnalyzing}
               />
-              <p className="text-sm text-muted-foreground">
-                Enter the product name or description for analysis
-              </p>
             </div>
             <Button 
               onClick={handleTextAnalyze}
@@ -108,7 +105,7 @@ export function ProductInput({ onAnalyze, isAnalyzing }: ProductInputProps) {
               size="lg"
             >
               <Sparkles className="w-4 h-4 mr-2" />
-              {isAnalyzing ? 'Analyzing...' : 'Analyze Product'}
+              {isAnalyzing ? t.analyzing : t.analyzeButton}
             </Button>
           </TabsContent>
         </Tabs>
