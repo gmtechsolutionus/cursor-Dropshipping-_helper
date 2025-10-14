@@ -26,11 +26,37 @@ export interface ProductAnalysis {
     platform: string;
     price: number;
     shipping_time: string;
+    shipping_cost?: number;
     rating: number;
     reviews_count: number;
     url: string;
+    moq?: number;
+    location?: string;
+    payment_methods?: string;
+    return_policy?: string;
   }[];
-  product_image?: string; // Base64 image data
+  product_image?: string;
+  pricing_strategy?: {
+    wholesale_price: { min: number; max: number; average: number };
+    suggested_retail_price: number;
+    profit_margin_percentage: number;
+    profit_margin_dollar: number;
+    competitive_analysis: string;
+  };
+  market_analysis?: {
+    demand_level: string;
+    competition_level: string;
+    seasonal_trends: string;
+    target_demographics: string;
+    best_selling_price: number;
+  };
+  logistics?: {
+    packaging_details: string;
+    shipping_weight: string;
+    shipping_dimensions: string;
+    customs_classification: string;
+    import_duties_estimate: string;
+  };
 }
 
 export interface PriceComparison {

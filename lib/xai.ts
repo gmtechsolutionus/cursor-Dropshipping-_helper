@@ -22,13 +22,61 @@ export async function analyzeProductImage(imageBase64: string) {
         content: [
           {
             type: 'text',
-            text: `Analyze this product image: Identify the exact item, brand, model, key features, materials, dimensions, and suggest dropshipping suppliers/pricing from major platforms like AliExpress/Amazon.
+            text: `Analyze this product image in COMPREHENSIVE detail for dropshipping business. Provide ALL information a dropshipper needs:
+
+PRODUCT IDENTIFICATION:
+- Exact product name, brand, model number
+- Complete specifications (dimensions, weight, material, color variants)
+- Key features and unique selling points
+- Target audience and use cases
+- Product category and niche
+
+SUPPLIER ANALYSIS (Provide at least 8-12 suppliers from different platforms):
+- AliExpress (find 3-4 suppliers with different price points)
+- Amazon (2-3 options including FBA)
+- DHgate (2-3 wholesale options)
+- Alibaba (1-2 bulk suppliers with MOQ)
+- eBay (1-2 options)
+- Other platforms (Banggood, Gearbest, etc.)
+
+For EACH supplier provide:
+- Supplier name and store rating
+- Exact price in USD
+- Estimated shipping time (realistic estimates)
+- Shipping cost estimate
+- Minimum order quantity (MOQ)
+- Store rating and review count
+- Supplier location/country
+- Product URL (generic platform URL)
+- Payment methods accepted
+- Return policy info
+
+PRICING STRATEGY:
+- Wholesale price range (min/max/average)
+- Suggested retail price
+- Estimated profit margin (percentage and dollar amount)
+- Competitive pricing analysis
+- Volume discount information
+
+MARKET ANALYSIS:
+- Current market demand (high/medium/low)
+- Competition level
+- Seasonal trends
+- Best selling price point
+- Target customer demographics
+
+LOGISTICS:
+- Packaging details
+- Shipping weight and dimensions
+- International shipping considerations
+- Customs classification
+- Import duties estimate
 
 IMPORTANT: You must respond with ONLY a valid JSON object. Do not include any markdown formatting, code blocks, or additional text. Start your response with { and end with }. Output the JSON with the following structure:
             {
               "product_name": "string",
-              "description": "string",
-              "features_list": ["string"],
+              "description": "string (detailed 2-3 paragraphs)",
+              "features_list": ["feature 1", "feature 2", "at least 5-8 features"],
               "specs": {
                 "brand": "string",
                 "model": "string",
@@ -42,24 +90,43 @@ IMPORTANT: You must respond with ONLY a valid JSON object. Do not include any ma
                 "max": number,
                 "average": number
               },
-              "affiliate_links": [
-                {
-                  "platform": "string",
-                  "url": "string",
-                  "price": number
-                }
-              ],
               "supplier_options": [
                 {
-                  "name": "string",
-                  "platform": "string",
+                  "name": "Supplier Name",
+                  "platform": "AliExpress/Amazon/DHgate/Alibaba/eBay/etc",
                   "price": number,
-                  "shipping_time": "string",
-                  "rating": number,
-                  "reviews_count": number,
-                  "url": "string"
+                  "shipping_time": "X-Y days",
+                  "shipping_cost": number,
+                  "rating": 4.5,
+                  "reviews_count": 1000,
+                  "url": "https://platform.com/product",
+                  "moq": 1,
+                  "location": "China/USA/etc",
+                  "payment_methods": "PayPal, Credit Card, etc",
+                  "return_policy": "30 days return"
                 }
-              ]
+              ],
+              "pricing_strategy": {
+                "wholesale_price": {"min": number, "max": number, "average": number},
+                "suggested_retail_price": number,
+                "profit_margin_percentage": number,
+                "profit_margin_dollar": number,
+                "competitive_analysis": "string with market pricing insights"
+              },
+              "market_analysis": {
+                "demand_level": "high/medium/low",
+                "competition_level": "high/medium/low",
+                "seasonal_trends": "description of seasonal patterns",
+                "target_demographics": "who buys this product",
+                "best_selling_price": number
+              },
+              "logistics": {
+                "packaging_details": "box size, packaging type",
+                "shipping_weight": "actual weight",
+                "shipping_dimensions": "LxWxH",
+                "customs_classification": "HS code if applicable",
+                "import_duties_estimate": "percentage or amount"
+              }
             }`
           },
           {
@@ -96,13 +163,61 @@ export async function generateWithGrok(prompt: string) {
 }
 
 export async function analyzeProductByName(productName: string) {
-  const prompt = `Analyze the product "${productName}" for dropshipping. Research and provide comprehensive information about this product including brand, model, key features, materials, typical dimensions, and suggest dropshipping suppliers/pricing from major platforms like AliExpress/Amazon.
+  const prompt = `Analyze the product "${productName}" in COMPREHENSIVE detail for dropshipping business. Provide ALL information a dropshipper needs:
+
+PRODUCT IDENTIFICATION:
+- Exact product name, brand, model number
+- Complete specifications (dimensions, weight, material, color variants)
+- Key features and unique selling points
+- Target audience and use cases
+- Product category and niche
+
+SUPPLIER ANALYSIS (Provide at least 8-12 suppliers from different platforms):
+- AliExpress (find 3-4 suppliers with different price points)
+- Amazon (2-3 options including FBA)
+- DHgate (2-3 wholesale options)
+- Alibaba (1-2 bulk suppliers with MOQ)
+- eBay (1-2 options)
+- Other platforms (Banggood, Gearbest, etc.)
+
+For EACH supplier provide:
+- Supplier name and store rating
+- Exact price in USD
+- Estimated shipping time (realistic estimates)
+- Shipping cost estimate
+- Minimum order quantity (MOQ)
+- Store rating and review count
+- Supplier location/country
+- Product URL (generic platform URL)
+- Payment methods accepted
+- Return policy info
+
+PRICING STRATEGY:
+- Wholesale price range (min/max/average)
+- Suggested retail price
+- Estimated profit margin (percentage and dollar amount)
+- Competitive pricing analysis
+- Volume discount information
+
+MARKET ANALYSIS:
+- Current market demand (high/medium/low)
+- Competition level
+- Seasonal trends
+- Best selling price point
+- Target customer demographics
+
+LOGISTICS:
+- Packaging details
+- Shipping weight and dimensions
+- International shipping considerations
+- Customs classification
+- Import duties estimate
 
 IMPORTANT: You must respond with ONLY a valid JSON object. Do not include any markdown formatting, code blocks, or additional text. Start your response with { and end with }. Output the JSON with the following structure:
   {
     "product_name": "string",
-    "description": "string",
-    "features_list": ["string"],
+    "description": "string (detailed 2-3 paragraphs)",
+    "features_list": ["feature 1", "feature 2", "at least 5-8 features"],
     "specs": {
       "brand": "string",
       "model": "string",
@@ -116,24 +231,43 @@ IMPORTANT: You must respond with ONLY a valid JSON object. Do not include any ma
       "max": number,
       "average": number
     },
-    "affiliate_links": [
-      {
-        "platform": "string",
-        "url": "string",
-        "price": number
-      }
-    ],
     "supplier_options": [
       {
-        "name": "string",
-        "platform": "string",
+        "name": "Supplier Name",
+        "platform": "AliExpress/Amazon/DHgate/Alibaba/eBay/etc",
         "price": number,
-        "shipping_time": "string",
-        "rating": number,
-        "reviews_count": number,
-        "url": "string"
+        "shipping_time": "X-Y days",
+        "shipping_cost": number,
+        "rating": 4.5,
+        "reviews_count": 1000,
+        "url": "https://platform.com/product",
+        "moq": 1,
+        "location": "China/USA/etc",
+        "payment_methods": "PayPal, Credit Card, etc",
+        "return_policy": "30 days return"
       }
-    ]
+    ],
+    "pricing_strategy": {
+      "wholesale_price": {"min": number, "max": number, "average": number},
+      "suggested_retail_price": number,
+      "profit_margin_percentage": number,
+      "profit_margin_dollar": number,
+      "competitive_analysis": "string with market pricing insights"
+    },
+    "market_analysis": {
+      "demand_level": "high/medium/low",
+      "competition_level": "high/medium/low",
+      "seasonal_trends": "description of seasonal patterns",
+      "target_demographics": "who buys this product",
+      "best_selling_price": number
+    },
+    "logistics": {
+      "packaging_details": "box size, packaging type",
+      "shipping_weight": "actual weight",
+      "shipping_dimensions": "LxWxH",
+      "customs_classification": "HS code if applicable",
+      "import_duties_estimate": "percentage or amount"
+    }
   }`;
 
   return await generateWithGrok(prompt);

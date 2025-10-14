@@ -332,54 +332,189 @@ export function ProductAnalysisDisplay({ analysis }: ProductAnalysisDisplayProps
         </CardContent>
       </Card>
 
+      {/* Pricing Strategy */}
+      {analysis.pricing_strategy && (
+        <Card>
+          <CardHeader>
+            <CardTitle>💰 Pricing Strategy & Profit Analysis</CardTitle>
+            <CardDescription>Maximize your profit margins with smart pricing</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="border rounded-lg p-4">
+                <h4 className="font-medium mb-2">Wholesale Pricing</h4>
+                <p className="text-2xl font-bold text-primary">
+                  ${analysis.pricing_strategy.wholesale_price.min} - ${analysis.pricing_strategy.wholesale_price.max}
+                </p>
+                <p className="text-sm text-muted-foreground">Average: ${analysis.pricing_strategy.wholesale_price.average}</p>
+              </div>
+              <div className="border rounded-lg p-4">
+                <h4 className="font-medium mb-2">Suggested Retail Price</h4>
+                <p className="text-2xl font-bold text-green-600">${analysis.pricing_strategy.suggested_retail_price}</p>
+                <p className="text-sm text-muted-foreground">Competitive market price</p>
+              </div>
+              <div className="border rounded-lg p-4 bg-green-50 dark:bg-green-950">
+                <h4 className="font-medium mb-2">Profit Margin</h4>
+                <p className="text-2xl font-bold text-green-700 dark:text-green-400">
+                  {analysis.pricing_strategy.profit_margin_percentage}%
+                </p>
+                <p className="text-sm text-muted-foreground">${analysis.pricing_strategy.profit_margin_dollar} per unit</p>
+              </div>
+              <div className="border rounded-lg p-4">
+                <h4 className="font-medium mb-2">Market Position</h4>
+                <p className="text-sm">{analysis.pricing_strategy.competitive_analysis}</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Market Analysis */}
+      {analysis.market_analysis && (
+        <Card>
+          <CardHeader>
+            <CardTitle>📊 Market Analysis & Demand</CardTitle>
+            <CardDescription>Understand market trends and opportunities</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+              <div className="border rounded-lg p-4 text-center">
+                <h4 className="font-medium mb-2">Demand Level</h4>
+                <Badge variant={analysis.market_analysis.demand_level === 'high' ? 'default' : 'secondary'} className="text-lg px-3 py-1">
+                  {analysis.market_analysis.demand_level.toUpperCase()}
+                </Badge>
+              </div>
+              <div className="border rounded-lg p-4 text-center">
+                <h4 className="font-medium mb-2">Competition</h4>
+                <Badge variant={analysis.market_analysis.competition_level === 'low' ? 'default' : 'secondary'} className="text-lg px-3 py-1">
+                  {analysis.market_analysis.competition_level.toUpperCase()}
+                </Badge>
+              </div>
+              <div className="border rounded-lg p-4 text-center">
+                <h4 className="font-medium mb-2">Best Price Point</h4>
+                <p className="text-2xl font-bold text-primary">${analysis.market_analysis.best_selling_price}</p>
+              </div>
+              <div className="border rounded-lg p-4 col-span-2 md:col-span-3">
+                <h4 className="font-medium mb-2">🎯 Target Demographics</h4>
+                <p className="text-muted-foreground">{analysis.market_analysis.target_demographics}</p>
+              </div>
+              <div className="border rounded-lg p-4 col-span-2 md:col-span-3">
+                <h4 className="font-medium mb-2">📅 Seasonal Trends</h4>
+                <p className="text-muted-foreground">{analysis.market_analysis.seasonal_trends}</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       {/* Supplier Options */}
       <Card>
         <CardHeader>
-          <CardTitle>Supplier Options</CardTitle>
-          <CardDescription>Recommended suppliers from various platforms</CardDescription>
+          <CardTitle>🏪 Supplier Options ({analysis.supplier_options.length} suppliers found)</CardTitle>
+          <CardDescription>Compare suppliers from multiple platforms</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
             {analysis.supplier_options.map((supplier, index) => (
-              <div key={index} className="border rounded-lg p-4 space-y-2">
+              <div key={index} className="border rounded-lg p-4 space-y-3">
                 <div className="flex justify-between items-start">
                   <div>
-                    <h4 className="font-medium">{supplier.name}</h4>
-                    <p className="text-sm text-muted-foreground">{supplier.platform}</p>
+                    <h4 className="font-medium text-lg">{supplier.name}</h4>
+                    <div className="flex items-center gap-2 mt-1">
+                      <Badge>{supplier.platform}</Badge>
+                      {supplier.location && <span className="text-xs text-muted-foreground">📍 {supplier.location}</span>}
+                    </div>
                   </div>
                   <div className="text-right">
-                    <p className="font-semibold text-lg">${supplier.price}</p>
-                    <p className="text-xs text-muted-foreground">{supplier.shipping_time}</p>
+                    <p className="font-semibold text-2xl text-primary">${supplier.price}</p>
+                    {supplier.shipping_cost && (
+                      <p className="text-xs text-muted-foreground">+ ${supplier.shipping_cost} shipping</p>
+                    )}
                   </div>
                 </div>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
+                
+                <div className="grid grid-cols-2 gap-2 text-sm">
+                  <div className="flex items-center gap-1">
                     <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                    <span className="text-sm">{supplier.rating} ({supplier.reviews_count} reviews)</span>
+                    <span>{supplier.rating} ({supplier.reviews_count.toLocaleString()} reviews)</span>
                   </div>
-                  <div className="flex gap-2">
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() => handleSupplierVerification(supplier)}
-                      disabled={loadingStates.supplier}
-                    >
-                      <Shield className="h-4 w-4 mr-1" />
-                      Verify
-                    </Button>
-                    <Button size="sm" variant="outline" asChild>
-                      <a href={supplier.url} target="_blank" rel="noopener noreferrer">
-                        <ExternalLink className="h-4 w-4 mr-1" />
-                        Visit
-                      </a>
-                    </Button>
+                  <div className="flex items-center gap-1">
+                    <Truck className="h-4 w-4" />
+                    <span>{supplier.shipping_time}</span>
                   </div>
+                  {supplier.moq && supplier.moq > 1 && (
+                    <div className="flex items-center gap-1">
+                      <Package className="h-4 w-4" />
+                      <span>MOQ: {supplier.moq} units</span>
+                    </div>
+                  )}
+                  {supplier.payment_methods && (
+                    <div className="flex items-center gap-1 text-xs">
+                      💳 {supplier.payment_methods}
+                    </div>
+                  )}
+                </div>
+
+                {supplier.return_policy && (
+                  <p className="text-xs text-muted-foreground">🔄 {supplier.return_policy}</p>
+                )}
+
+                <div className="flex gap-2">
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => handleSupplierVerification(supplier)}
+                    disabled={loadingStates.supplier}
+                  >
+                    <Shield className="h-4 w-4 mr-1" />
+                    Verify
+                  </Button>
+                  <Button size="sm" variant="outline" asChild>
+                    <a href={supplier.url} target="_blank" rel="noopener noreferrer">
+                      <ExternalLink className="h-4 w-4 mr-1" />
+                      Visit Store
+                    </a>
+                  </Button>
                 </div>
               </div>
             ))}
           </div>
         </CardContent>
       </Card>
+
+      {/* Logistics Information */}
+      {analysis.logistics && (
+        <Card>
+          <CardHeader>
+            <CardTitle>📦 Logistics & Shipping Information</CardTitle>
+            <CardDescription>Important details for international shipping</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="border rounded-lg p-4">
+                <h4 className="font-medium mb-2">📦 Packaging</h4>
+                <p className="text-sm text-muted-foreground">{analysis.logistics.packaging_details}</p>
+              </div>
+              <div className="border rounded-lg p-4">
+                <h4 className="font-medium mb-2">⚖️ Shipping Weight</h4>
+                <p className="text-sm text-muted-foreground">{analysis.logistics.shipping_weight}</p>
+              </div>
+              <div className="border rounded-lg p-4">
+                <h4 className="font-medium mb-2">📏 Dimensions</h4>
+                <p className="text-sm text-muted-foreground">{analysis.logistics.shipping_dimensions}</p>
+              </div>
+              <div className="border rounded-lg p-4">
+                <h4 className="font-medium mb-2">🏷️ Customs Classification</h4>
+                <p className="text-sm text-muted-foreground">{analysis.logistics.customs_classification}</p>
+              </div>
+              <div className="border rounded-lg p-4 col-span-1 md:col-span-2">
+                <h4 className="font-medium mb-2">💵 Import Duties Estimate</h4>
+                <p className="text-sm text-muted-foreground">{analysis.logistics.import_duties_estimate}</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Analysis Tools */}
       <Card>
