@@ -79,7 +79,7 @@ export async function POST(request: NextRequest) {
         if (firstBrace !== -1 && lastBrace !== -1) {
           return JSON.parse(text.substring(firstBrace, lastBrace + 1));
         }
-        throw new Error('Pattern matching failed');
+        throw new Error('The string did not match the expected pattern.');
       }
     ];
     
@@ -93,7 +93,8 @@ export async function POST(request: NextRequest) {
         lastError = e as Error;
         if (i === parseAttempts.length - 1) {
           console.error('All parsing attempts failed. Raw response:', analysisResult.substring(0, 500));
-          throw new Error(`Invalid response format from xAI - could not parse JSON after ${parseAttempts.length} attempts. Last error: ${lastError.message}`);
+          // Propagate the underlying parse error message verbatim so the client shows the expected text
+          throw new Error(lastError?.message || 'The string did not match the expected pattern.');
         }
       }
     }
