@@ -1,11 +1,19 @@
 import OpenAI from 'openai';
 
-export const xai = new OpenAI({
-  apiKey: process.env.NEXT_PUBLIC_XAI_API_KEY,
-  baseURL: 'https://api.x.ai/v1',
-});
+let xaiClient: OpenAI | null = null;
+
+function getXAIClient() {
+  if (!xaiClient) {
+    xaiClient = new OpenAI({
+      apiKey: process.env.NEXT_PUBLIC_XAI_API_KEY || '',
+      baseURL: 'https://api.x.ai/v1',
+    });
+  }
+  return xaiClient;
+}
 
 export async function analyzeProductImage(imageBase64: string) {
+  const xai = getXAIClient();
   const response = await xai.chat.completions.create({
     model: 'grok-vision-beta',
     messages: [
@@ -69,6 +77,7 @@ export async function analyzeProductImage(imageBase64: string) {
 }
 
 export async function generateWithGrok(prompt: string) {
+  const xai = getXAIClient();
   const response = await xai.chat.completions.create({
     model: 'grok-beta',
     messages: [
