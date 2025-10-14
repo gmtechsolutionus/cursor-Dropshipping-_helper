@@ -44,6 +44,44 @@ export const translations = {
     priceRange: "Price Range",
     average: "Average",
     estimatedPrice: "Estimated Price",
+    
+    // Pricing Strategy
+    pricingStrategy: "Pricing Strategy & Profit Analysis",
+    pricingStrategyDesc: "Maximize your profit margins with smart pricing",
+    wholesalePricing: "Wholesale Pricing",
+    suggestedRetail: "Suggested Retail Price",
+    profitMargin: "Profit Margin",
+    perUnit: "per unit",
+    marketPosition: "Market Position",
+    competitivePrice: "Competitive market price",
+    
+    // Market Analysis
+    marketAnalysis: "Market Analysis & Demand",
+    marketAnalysisDesc: "Understand market trends and opportunities",
+    demandLevel: "Demand Level",
+    competition: "Competition",
+    bestPricePoint: "Best Price Point",
+    targetDemo: "Target Demographics",
+    seasonalTrends: "Seasonal Trends",
+    
+    // Product Links
+    productLinks: "Product Links",
+    productLinksDesc: "Best pricing and highest rated products from all platforms",
+    productsFound: "products found",
+    shipping: "Shipping",
+    moq: "MOQ",
+    units: "units",
+    visitProduct: "Visit Product",
+    
+    // Logistics
+    logistics: "Logistics & Shipping Information",
+    logisticsDesc: "Important details for international shipping",
+    packaging: "Packaging",
+    shippingWeight: "Shipping Weight",
+    dimensions: "Dimensions",
+    customsClass: "Customs Classification",
+    importDuties: "Import Duties Estimate",
+    
     affiliateLinks: "Affiliate Links",
     supplierOptions: "Supplier Options",
     platform: "Platform",

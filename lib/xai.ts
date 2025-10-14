@@ -31,25 +31,28 @@ PRODUCT IDENTIFICATION:
 - Target audience and use cases
 - Product category and niche
 
-SUPPLIER ANALYSIS (Provide at least 8-12 suppliers from different platforms):
-- AliExpress (find 3-4 suppliers with different price points)
-- Amazon (2-3 options including FBA)
-- DHgate (2-3 wholesale options)
-- Alibaba (1-2 bulk suppliers with MOQ)
-- eBay (1-2 options)
-- Other platforms (Banggood, Gearbest, etc.)
+PRODUCT LINKS (Provide 10-15 DIRECT product links from ALL platforms):
+Find the BEST PRICED and HIGHEST RATED product listings from:
+- AliExpress (4-5 listings with 4.5+ rating, 500+ reviews, best prices)
+- Amazon (3-4 listings from US/international sellers with Prime options)
+- DHgate (2-3 wholesale listings with competitive pricing)
+- Alibaba (1-2 bulk suppliers with reasonable MOQ)
+- eBay (1-2 highly rated sellers with good prices)
+- Walmart, Banggood, Gearbest, Wish (2-3 additional best deals)
 
-For EACH supplier provide:
-- Supplier name and store rating
-- Exact price in USD
-- Estimated shipping time (realistic estimates)
-- Shipping cost estimate
+For EACH product link provide:
+- Exact product title as shown on platform
+- Direct product URL (actual searchable/generic product link)
+- Current price in USD
+- Shipping time and shipping cost estimate
+- Product rating (4.0+) and review count (prefer 100+)
+- Seller name, rating, and location
 - Minimum order quantity (MOQ)
-- Store rating and review count
-- Supplier location/country
-- Product URL (generic platform URL)
-- Payment methods accepted
-- Return policy info
+- Payment methods available
+- Return/refund policy details
+- Special deals or bulk discounts if available
+
+Focus on: HIGH RATINGS (4.0+), MANY REVIEWS, COMPETITIVE PRICES, FAST SHIPPING, RELIABLE SELLERS
 
 PRICING STRATEGY:
 - Wholesale price range (min/max/average)
@@ -172,25 +175,28 @@ PRODUCT IDENTIFICATION:
 - Target audience and use cases
 - Product category and niche
 
-SUPPLIER ANALYSIS (Provide at least 8-12 suppliers from different platforms):
-- AliExpress (find 3-4 suppliers with different price points)
-- Amazon (2-3 options including FBA)
-- DHgate (2-3 wholesale options)
-- Alibaba (1-2 bulk suppliers with MOQ)
-- eBay (1-2 options)
-- Other platforms (Banggood, Gearbest, etc.)
+PRODUCT LINKS (Provide 10-15 DIRECT product links from ALL platforms):
+Find the BEST PRICED and HIGHEST RATED product listings from:
+- AliExpress (4-5 listings with 4.5+ rating, 500+ reviews, best prices)
+- Amazon (3-4 listings from US/international sellers with Prime options)
+- DHgate (2-3 wholesale listings with competitive pricing)
+- Alibaba (1-2 bulk suppliers with reasonable MOQ)
+- eBay (1-2 highly rated sellers with good prices)
+- Walmart, Banggood, Gearbest, Wish (2-3 additional best deals)
 
-For EACH supplier provide:
-- Supplier name and store rating
-- Exact price in USD
-- Estimated shipping time (realistic estimates)
-- Shipping cost estimate
+For EACH product link provide:
+- Exact product title as shown on platform
+- Direct product URL (actual searchable/generic product link)
+- Current price in USD
+- Shipping time and shipping cost estimate
+- Product rating (4.0+) and review count (prefer 100+)
+- Seller name, rating, and location
 - Minimum order quantity (MOQ)
-- Store rating and review count
-- Supplier location/country
-- Product URL (generic platform URL)
-- Payment methods accepted
-- Return policy info
+- Payment methods available
+- Return/refund policy details
+- Special deals or bulk discounts if available
+
+Focus on: HIGH RATINGS (4.0+), MANY REVIEWS, COMPETITIVE PRICES, FAST SHIPPING, RELIABLE SELLERS
 
 PRICING STRATEGY:
 - Wholesale price range (min/max/average)

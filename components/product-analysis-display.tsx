@@ -10,12 +10,14 @@ import { Download, ExternalLink, Package, TrendingUp, Shield, Truck, Star, Searc
 import toast from 'react-hot-toast';
 import jsPDF from 'jspdf';
 import Papa from 'papaparse';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface ProductAnalysisDisplayProps {
   analysis: ProductAnalysis;
 }
 
 export function ProductAnalysisDisplay({ analysis }: ProductAnalysisDisplayProps) {
+  const { t } = useLanguage();
   const [priceComparison, setPriceComparison] = useState<PriceComparison | null>(null);
   const [supplierVerification, setSupplierVerification] = useState<SupplierVerification | null>(null);
   const [shippingEstimate, setShippingEstimate] = useState<ShippingEstimate | null>(null);
@@ -259,11 +261,11 @@ export function ProductAnalysisDisplay({ analysis }: ProductAnalysisDisplayProps
         <div className="flex gap-2">
           <Button onClick={exportToPDF} variant="outline" size="sm">
             <Download className="h-4 w-4 mr-2" />
-            Export PDF
+            {t.exportPDF}
           </Button>
           <Button onClick={exportToCSV} variant="outline" size="sm">
             <FileText className="h-4 w-4 mr-2" />
-            Export CSV
+            {t.exportCSV}
           </Button>
         </div>
       </div>
@@ -272,7 +274,7 @@ export function ProductAnalysisDisplay({ analysis }: ProductAnalysisDisplayProps
       {analysis.product_image && (
         <Card>
           <CardHeader>
-            <CardTitle>Product Image</CardTitle>
+            <CardTitle>{t.productImage}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex justify-center">
@@ -289,16 +291,16 @@ export function ProductAnalysisDisplay({ analysis }: ProductAnalysisDisplayProps
       {/* Product Overview */}
       <Card>
         <CardHeader>
-          <CardTitle>Product Overview</CardTitle>
+          <CardTitle>{t.productOverview}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div>
-            <h4 className="font-medium mb-2">Description</h4>
+            <h4 className="font-medium mb-2">{t.description}</h4>
             <p className="text-muted-foreground">{analysis.description}</p>
           </div>
           
           <div>
-            <h4 className="font-medium mb-2">Key Features</h4>
+            <h4 className="font-medium mb-2">{t.keyFeatures}</h4>
             <ul className="list-disc list-inside space-y-1">
               {analysis.features_list.map((feature, index) => (
                 <li key={index} className="text-muted-foreground">{feature}</li>
@@ -307,7 +309,7 @@ export function ProductAnalysisDisplay({ analysis }: ProductAnalysisDisplayProps
           </div>
           
           <div>
-            <h4 className="font-medium mb-2">Specifications</h4>
+            <h4 className="font-medium mb-2">{t.specifications}</h4>
             <div className="grid grid-cols-2 gap-2">
               {Object.entries(analysis.specs).map(([key, value]) => (
                 value && (
@@ -321,12 +323,12 @@ export function ProductAnalysisDisplay({ analysis }: ProductAnalysisDisplayProps
           </div>
           
           <div>
-            <h4 className="font-medium mb-2">Price Range</h4>
+            <h4 className="font-medium mb-2">{t.priceRange}</h4>
             <div className="flex items-center gap-4">
               <Badge variant="secondary" className="text-lg px-3 py-1">
                 ${analysis.estimated_price_usd.min} - ${analysis.estimated_price_usd.max}
               </Badge>
-              <span className="text-muted-foreground">Average: ${analysis.estimated_price_usd.average}</span>
+              <span className="text-muted-foreground">{t.average}: ${analysis.estimated_price_usd.average}</span>
             </div>
           </div>
         </CardContent>
@@ -336,32 +338,32 @@ export function ProductAnalysisDisplay({ analysis }: ProductAnalysisDisplayProps
       {analysis.pricing_strategy && (
         <Card>
           <CardHeader>
-            <CardTitle>💰 Pricing Strategy & Profit Analysis</CardTitle>
-            <CardDescription>Maximize your profit margins with smart pricing</CardDescription>
+            <CardTitle>💰 {t.pricingStrategy}</CardTitle>
+            <CardDescription>{t.pricingStrategyDesc}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="border rounded-lg p-4">
-                <h4 className="font-medium mb-2">Wholesale Pricing</h4>
+                <h4 className="font-medium mb-2">{t.wholesalePricing}</h4>
                 <p className="text-2xl font-bold text-primary">
                   ${analysis.pricing_strategy.wholesale_price.min} - ${analysis.pricing_strategy.wholesale_price.max}
                 </p>
-                <p className="text-sm text-muted-foreground">Average: ${analysis.pricing_strategy.wholesale_price.average}</p>
+                <p className="text-sm text-muted-foreground">{t.average}: ${analysis.pricing_strategy.wholesale_price.average}</p>
               </div>
               <div className="border rounded-lg p-4">
-                <h4 className="font-medium mb-2">Suggested Retail Price</h4>
+                <h4 className="font-medium mb-2">{t.suggestedRetail}</h4>
                 <p className="text-2xl font-bold text-green-600">${analysis.pricing_strategy.suggested_retail_price}</p>
-                <p className="text-sm text-muted-foreground">Competitive market price</p>
+                <p className="text-sm text-muted-foreground">{t.competitivePrice}</p>
               </div>
               <div className="border rounded-lg p-4 bg-green-50 dark:bg-green-950">
-                <h4 className="font-medium mb-2">Profit Margin</h4>
+                <h4 className="font-medium mb-2">{t.profitMargin}</h4>
                 <p className="text-2xl font-bold text-green-700 dark:text-green-400">
                   {analysis.pricing_strategy.profit_margin_percentage}%
                 </p>
-                <p className="text-sm text-muted-foreground">${analysis.pricing_strategy.profit_margin_dollar} per unit</p>
+                <p className="text-sm text-muted-foreground">${analysis.pricing_strategy.profit_margin_dollar} {t.perUnit}</p>
               </div>
               <div className="border rounded-lg p-4">
-                <h4 className="font-medium mb-2">Market Position</h4>
+                <h4 className="font-medium mb-2">{t.marketPosition}</h4>
                 <p className="text-sm">{analysis.pricing_strategy.competitive_analysis}</p>
               </div>
             </div>
@@ -373,33 +375,33 @@ export function ProductAnalysisDisplay({ analysis }: ProductAnalysisDisplayProps
       {analysis.market_analysis && (
         <Card>
           <CardHeader>
-            <CardTitle>📊 Market Analysis & Demand</CardTitle>
-            <CardDescription>Understand market trends and opportunities</CardDescription>
+            <CardTitle>📊 {t.marketAnalysis}</CardTitle>
+            <CardDescription>{t.marketAnalysisDesc}</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
               <div className="border rounded-lg p-4 text-center">
-                <h4 className="font-medium mb-2">Demand Level</h4>
+                <h4 className="font-medium mb-2">{t.demandLevel}</h4>
                 <Badge variant={analysis.market_analysis.demand_level === 'high' ? 'default' : 'secondary'} className="text-lg px-3 py-1">
                   {analysis.market_analysis.demand_level.toUpperCase()}
                 </Badge>
               </div>
               <div className="border rounded-lg p-4 text-center">
-                <h4 className="font-medium mb-2">Competition</h4>
+                <h4 className="font-medium mb-2">{t.competition}</h4>
                 <Badge variant={analysis.market_analysis.competition_level === 'low' ? 'default' : 'secondary'} className="text-lg px-3 py-1">
                   {analysis.market_analysis.competition_level.toUpperCase()}
                 </Badge>
               </div>
               <div className="border rounded-lg p-4 text-center">
-                <h4 className="font-medium mb-2">Best Price Point</h4>
+                <h4 className="font-medium mb-2">{t.bestPricePoint}</h4>
                 <p className="text-2xl font-bold text-primary">${analysis.market_analysis.best_selling_price}</p>
               </div>
               <div className="border rounded-lg p-4 col-span-2 md:col-span-3">
-                <h4 className="font-medium mb-2">🎯 Target Demographics</h4>
+                <h4 className="font-medium mb-2">🎯 {t.targetDemo}</h4>
                 <p className="text-muted-foreground">{analysis.market_analysis.target_demographics}</p>
               </div>
               <div className="border rounded-lg p-4 col-span-2 md:col-span-3">
-                <h4 className="font-medium mb-2">📅 Seasonal Trends</h4>
+                <h4 className="font-medium mb-2">📅 {t.seasonalTrends}</h4>
                 <p className="text-muted-foreground">{analysis.market_analysis.seasonal_trends}</p>
               </div>
             </div>
@@ -407,16 +409,16 @@ export function ProductAnalysisDisplay({ analysis }: ProductAnalysisDisplayProps
         </Card>
       )}
 
-      {/* Supplier Options */}
+      {/* Product Links */}
       <Card>
         <CardHeader>
-          <CardTitle>🏪 Supplier Options ({analysis.supplier_options.length} suppliers found)</CardTitle>
-          <CardDescription>Compare suppliers from multiple platforms</CardDescription>
+          <CardTitle>🔗 {t.productLinks} ({analysis.supplier_options.length} {t.productsFound})</CardTitle>
+          <CardDescription>{t.productLinksDesc}</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
             {analysis.supplier_options.map((supplier, index) => (
-              <div key={index} className="border rounded-lg p-4 space-y-3">
+              <div key={index} className="border rounded-lg p-4 space-y-3 hover:shadow-md transition-shadow">
                 <div className="flex justify-between items-start">
                   <div>
                     <h4 className="font-medium text-lg">{supplier.name}</h4>
@@ -427,8 +429,8 @@ export function ProductAnalysisDisplay({ analysis }: ProductAnalysisDisplayProps
                   </div>
                   <div className="text-right">
                     <p className="font-semibold text-2xl text-primary">${supplier.price}</p>
-                    {supplier.shipping_cost && (
-                      <p className="text-xs text-muted-foreground">+ ${supplier.shipping_cost} shipping</p>
+                    {supplier.shipping_cost && supplier.shipping_cost > 0 && (
+                      <p className="text-xs text-muted-foreground">+ ${supplier.shipping_cost} {t.shipping}</p>
                     )}
                   </div>
                 </div>
@@ -436,7 +438,7 @@ export function ProductAnalysisDisplay({ analysis }: ProductAnalysisDisplayProps
                 <div className="grid grid-cols-2 gap-2 text-sm">
                   <div className="flex items-center gap-1">
                     <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                    <span>{supplier.rating} ({supplier.reviews_count.toLocaleString()} reviews)</span>
+                    <span>{supplier.rating} ({supplier.reviews_count.toLocaleString()} {t.reviews})</span>
                   </div>
                   <div className="flex items-center gap-1">
                     <Truck className="h-4 w-4" />
@@ -445,7 +447,7 @@ export function ProductAnalysisDisplay({ analysis }: ProductAnalysisDisplayProps
                   {supplier.moq && supplier.moq > 1 && (
                     <div className="flex items-center gap-1">
                       <Package className="h-4 w-4" />
-                      <span>MOQ: {supplier.moq} units</span>
+                      <span>{t.moq}: {supplier.moq} {t.units}</span>
                     </div>
                   )}
                   {supplier.payment_methods && (
@@ -460,19 +462,10 @@ export function ProductAnalysisDisplay({ analysis }: ProductAnalysisDisplayProps
                 )}
 
                 <div className="flex gap-2">
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={() => handleSupplierVerification(supplier)}
-                    disabled={loadingStates.supplier}
-                  >
-                    <Shield className="h-4 w-4 mr-1" />
-                    Verify
-                  </Button>
-                  <Button size="sm" variant="outline" asChild>
+                  <Button size="sm" variant="default" className="flex-1" asChild>
                     <a href={supplier.url} target="_blank" rel="noopener noreferrer">
                       <ExternalLink className="h-4 w-4 mr-1" />
-                      Visit Store
+                      {t.visitProduct}
                     </a>
                   </Button>
                 </div>
@@ -486,29 +479,29 @@ export function ProductAnalysisDisplay({ analysis }: ProductAnalysisDisplayProps
       {analysis.logistics && (
         <Card>
           <CardHeader>
-            <CardTitle>📦 Logistics & Shipping Information</CardTitle>
-            <CardDescription>Important details for international shipping</CardDescription>
+            <CardTitle>📦 {t.logistics}</CardTitle>
+            <CardDescription>{t.logisticsDesc}</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="border rounded-lg p-4">
-                <h4 className="font-medium mb-2">📦 Packaging</h4>
+                <h4 className="font-medium mb-2">📦 {t.packaging}</h4>
                 <p className="text-sm text-muted-foreground">{analysis.logistics.packaging_details}</p>
               </div>
               <div className="border rounded-lg p-4">
-                <h4 className="font-medium mb-2">⚖️ Shipping Weight</h4>
+                <h4 className="font-medium mb-2">⚖️ {t.shippingWeight}</h4>
                 <p className="text-sm text-muted-foreground">{analysis.logistics.shipping_weight}</p>
               </div>
               <div className="border rounded-lg p-4">
-                <h4 className="font-medium mb-2">📏 Dimensions</h4>
+                <h4 className="font-medium mb-2">📏 {t.dimensions}</h4>
                 <p className="text-sm text-muted-foreground">{analysis.logistics.shipping_dimensions}</p>
               </div>
               <div className="border rounded-lg p-4">
-                <h4 className="font-medium mb-2">🏷️ Customs Classification</h4>
+                <h4 className="font-medium mb-2">🏷️ {t.customsClass}</h4>
                 <p className="text-sm text-muted-foreground">{analysis.logistics.customs_classification}</p>
               </div>
               <div className="border rounded-lg p-4 col-span-1 md:col-span-2">
-                <h4 className="font-medium mb-2">💵 Import Duties Estimate</h4>
+                <h4 className="font-medium mb-2">💵 {t.importDuties}</h4>
                 <p className="text-sm text-muted-foreground">{analysis.logistics.import_duties_estimate}</p>
               </div>
             </div>
