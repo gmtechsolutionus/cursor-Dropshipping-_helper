@@ -15,7 +15,7 @@ function getXAIClient() {
 export async function analyzeProductImage(imageBase64: string) {
   const xai = getXAIClient();
   const response = await xai.chat.completions.create({
-    model: 'grok-3',
+    model: 'grok-4',
     messages: [
       {
         role: 'user',
@@ -79,7 +79,7 @@ export async function analyzeProductImage(imageBase64: string) {
 export async function generateWithGrok(prompt: string) {
   const xai = getXAIClient();
   const response = await xai.chat.completions.create({
-    model: 'grok-beta',
+    model: 'grok-4',
     messages: [
       {
         role: 'user',
