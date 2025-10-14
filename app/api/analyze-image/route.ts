@@ -83,7 +83,8 @@ export async function POST(request: NextRequest) {
         average: 0
       },
       affiliate_links: productAnalysis.affiliate_links || [],
-      supplier_options: productAnalysis.supplier_options || []
+      supplier_options: productAnalysis.supplier_options || [],
+      product_image: imageBase64 ? `data:image/jpeg;base64,${imageBase64}` : undefined
     };
 
     return NextResponse.json(productAnalysis);

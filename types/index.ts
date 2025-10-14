@@ -30,6 +30,7 @@ export interface ProductAnalysis {
     reviews_count: number;
     url: string;
   }[];
+  product_image?: string; // Base64 image data
 }
 
 export interface PriceComparison {

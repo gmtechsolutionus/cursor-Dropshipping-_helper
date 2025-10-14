@@ -268,6 +268,24 @@ export function ProductAnalysisDisplay({ analysis }: ProductAnalysisDisplayProps
         </div>
       </div>
 
+      {/* Product Image */}
+      {analysis.product_image && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Product Image</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex justify-center">
+              <img 
+                src={analysis.product_image} 
+                alt={analysis.product_name}
+                className="max-w-full h-auto max-h-96 rounded-lg shadow-lg object-contain"
+              />
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       {/* Product Overview */}
       <Card>
         <CardHeader>
