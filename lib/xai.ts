@@ -15,7 +15,7 @@ function getXAIClient() {
 export async function analyzeProductImage(imageBase64: string) {
   const xai = getXAIClient();
   const response = await xai.chat.completions.create({
-    model: 'grok-4',
+    model: 'grok-2-vision-latest',
     messages: [
       {
         role: 'user',
@@ -24,7 +24,7 @@ export async function analyzeProductImage(imageBase64: string) {
             type: 'text',
             text: `Analyze this product image: Identify the exact item, brand, model, key features, materials, dimensions, and suggest dropshipping suppliers/pricing from major platforms like AliExpress/Amazon.
 
-IMPORTANT: Return ONLY a valid JSON object, no additional text or markdown. Output in JSON format with the following structure:
+IMPORTANT: You must respond with ONLY a valid JSON object. Do not include any markdown formatting, code blocks, or additional text. Start your response with { and end with }. Output the JSON with the following structure:
             {
               "product_name": "string",
               "description": "string",
@@ -73,7 +73,6 @@ IMPORTANT: Return ONLY a valid JSON object, no additional text or markdown. Outp
     ],
     temperature: 0.7,
     max_tokens: 2048,
-    response_format: { type: 'json_object' },
   });
 
   return response.choices[0].message.content;
@@ -82,7 +81,7 @@ IMPORTANT: Return ONLY a valid JSON object, no additional text or markdown. Outp
 export async function generateWithGrok(prompt: string) {
   const xai = getXAIClient();
   const response = await xai.chat.completions.create({
-    model: 'grok-4',
+    model: 'grok-2-latest',
     messages: [
       {
         role: 'user',
@@ -91,7 +90,6 @@ export async function generateWithGrok(prompt: string) {
     ],
     temperature: 0.7,
     max_tokens: 2048,
-    response_format: { type: 'json_object' },
   });
 
   return response.choices[0].message.content;
@@ -100,7 +98,7 @@ export async function generateWithGrok(prompt: string) {
 export async function analyzeProductByName(productName: string) {
   const prompt = `Analyze the product "${productName}" for dropshipping. Research and provide comprehensive information about this product including brand, model, key features, materials, typical dimensions, and suggest dropshipping suppliers/pricing from major platforms like AliExpress/Amazon.
 
-IMPORTANT: Return ONLY a valid JSON object, no additional text or markdown. Output in JSON format with the following structure:
+IMPORTANT: You must respond with ONLY a valid JSON object. Do not include any markdown formatting, code blocks, or additional text. Start your response with { and end with }. Output the JSON with the following structure:
   {
     "product_name": "string",
     "description": "string",
