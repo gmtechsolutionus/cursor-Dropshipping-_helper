@@ -139,7 +139,7 @@ IMPORTANT: You must respond with ONLY a valid JSON object. Do not include any ma
       }
     ],
     temperature: 0.7,
-    max_tokens: 2048,
+    max_tokens: 4096,
   });
 
   return response.choices[0].message.content;
@@ -156,7 +156,7 @@ export async function generateWithGrok(prompt: string) {
       }
     ],
     temperature: 0.7,
-    max_tokens: 2048,
+    max_tokens: 4096,
   });
 
   return response.choices[0].message.content;
