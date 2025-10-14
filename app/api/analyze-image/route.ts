@@ -30,7 +30,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Parse the JSON response with multiple fallback methods
-    let productAnalysis: ProductAnalysis;
+    let productAnalysis: ProductAnalysis | null = null;
     
     const parseAttempts = [
       // Method 1: Direct parsing
@@ -96,6 +96,11 @@ export async function POST(request: NextRequest) {
           throw new Error(`Invalid response format from xAI - could not parse JSON after ${parseAttempts.length} attempts. Last error: ${lastError.message}`);
         }
       }
+    }
+
+    // Validate parsing succeeded
+    if (!productAnalysis) {
+      throw new Error('Failed to parse JSON response');
     }
 
     // Validate the response structure
