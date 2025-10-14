@@ -13,7 +13,7 @@ A production-ready Next.js web application that leverages the xAI API (Grok) to 
 - **Competitor Analysis**: Understand market positioning and opportunities
 - **Export Functionality**: Export analysis results as PDF or CSV
 - **Dark Mode**: Built-in dark mode support
-- **Secure Authentication**: Google OAuth integration with NextAuth.js
+- **No Authentication Required**: Direct access without login
 
 ## Tech Stack
 
@@ -21,7 +21,6 @@ A production-ready Next.js web application that leverages the xAI API (Grok) to 
 - **Language**: TypeScript
 - **Styling**: Tailwind CSS
 - **AI Integration**: xAI API (Grok)
-- **Authentication**: NextAuth.js
 - **UI Components**: Radix UI
 - **Export**: jsPDF, PapaParse
 - **Deployment**: Optimized for Vercel Edge Runtime
@@ -30,7 +29,6 @@ A production-ready Next.js web application that leverages the xAI API (Grok) to 
 
 - Node.js 18+ and npm
 - xAI API key
-- Google OAuth credentials (for authentication)
 - Vercel account (for deployment)
 
 ## Installation
@@ -55,14 +53,6 @@ cp .env.example .env.local
 ```env
 # xAI API Configuration
 NEXT_PUBLIC_XAI_API_KEY=your_xai_api_key_here
-
-# NextAuth Configuration
-NEXTAUTH_URL=http://localhost:3000
-NEXTAUTH_SECRET=your_nextauth_secret_here
-
-# Google OAuth
-GOOGLE_CLIENT_ID=your_google_client_id
-GOOGLE_CLIENT_SECRET=your_google_client_secret
 ```
 
 ## Development
@@ -104,8 +94,6 @@ vercel --prod
 │   │   ├── reviews/         # Review analysis endpoint
 │   │   ├── seo-desc/        # SEO description generation
 │   │   ├── competitors/     # Competitor analysis endpoint
-│   │   └── auth/           # NextAuth configuration
-│   ├── login/              # Login page
 │   ├── layout.tsx          # Root layout with providers
 │   ├── page.tsx            # Main dashboard
 │   └── globals.css         # Global styles
@@ -113,14 +101,12 @@ vercel --prod
 │   ├── ui/                 # Reusable UI components
 │   ├── image-upload.tsx    # Drag-and-drop upload component
 │   ├── product-analysis-display.tsx  # Analysis results display
-│   ├── session-provider.tsx # Auth session provider
 │   └── theme-provider.tsx   # Theme provider
 ├── lib/
 │   ├── xai.ts              # xAI API integration
 │   └── utils.ts            # Utility functions
 ├── types/
 │   └── index.ts            # TypeScript type definitions
-├── middleware.ts           # Auth middleware
 ├── vercel.json            # Vercel configuration
 └── package.json           # Dependencies and scripts
 ```
@@ -139,10 +125,8 @@ All API routes are optimized for Vercel Edge Runtime:
 
 ## Security
 
-- All API routes are protected with authentication
 - xAI API key is stored securely as environment variable
-- OAuth integration for secure user authentication
-- Session management with NextAuth.js
+- All API calls are made server-side to protect the API key
 
 ## Performance Optimizations
 

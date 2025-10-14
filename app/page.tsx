@@ -1,8 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { useSession, signOut } from 'next-auth/react';
-import { redirect } from 'next/navigation';
 import { ImageUpload } from '@/components/image-upload';
 import { ProductAnalysisDisplay } from '@/components/product-analysis-display';
 import { Button } from '@/components/ui/button';
@@ -10,27 +8,14 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ProductAnalysis } from '@/types';
 import toast from 'react-hot-toast';
-import { Moon, Sun, Package, TrendingUp, Shield, Truck, Star, Search, LogOut } from 'lucide-react';
+import { Moon, Sun, Package, TrendingUp, Shield, Truck, Star, Search } from 'lucide-react';
 import { useTheme } from 'next-themes';
 
 export default function Dashboard() {
-  const { data: session, status } = useSession();
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [productAnalysis, setProductAnalysis] = useState<ProductAnalysis | null>(null);
   const [activeTab, setActiveTab] = useState('analyze');
   const { theme, setTheme } = useTheme();
-
-  if (status === 'loading') {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-      </div>
-    );
-  }
-
-  if (status === 'unauthenticated') {
-    redirect('/login');
-  }
 
   const handleImageUpload = async (file: File) => {
     setIsAnalyzing(true);
@@ -91,26 +76,14 @@ export default function Dashboard() {
       <header className="border-b">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <h1 className="text-2xl font-bold">Dropshipping Helper</h1>
-          <div className="flex items-center gap-4">
-            <span className="text-sm text-muted-foreground">
-              {session?.user?.email}
-            </span>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-            >
-              <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-              <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => signOut()}
-            >
-              <LogOut className="h-5 w-5" />
-            </Button>
-          </div>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+          >
+            <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+            <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+          </Button>
         </div>
       </header>
 
