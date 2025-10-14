@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Search, Upload } from 'lucide-react';
+import { Search, Upload, Sparkles } from 'lucide-react';
 
 interface ProductInputProps {
   onAnalyze: (data: { image?: File; productName?: string }) => void;
@@ -19,19 +19,23 @@ export function ProductInput({ onAnalyze, isAnalyzing }: ProductInputProps) {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [activeTab, setActiveTab] = useState('upload');
 
-  const handleImageUpload = (file: File) => {
+  const handleImageUpload = (file: File | null) => {
     setSelectedFile(file);
   };
 
   const handleImageAnalyze = () => {
     if (selectedFile) {
       onAnalyze({ image: selectedFile });
+      // Reset after submit
+      setSelectedFile(null);
     }
   };
 
   const handleTextAnalyze = () => {
     if (productName.trim()) {
       onAnalyze({ productName: productName.trim() });
+      // Reset after submit
+      setProductName('');
     }
   };
 
@@ -59,15 +63,20 @@ export function ProductInput({ onAnalyze, isAnalyzing }: ProductInputProps) {
           <TabsContent value="upload" className="space-y-4">
             <ImageUpload 
               onImageUpload={handleImageUpload} 
-              isUploading={isAnalyzing}
+              isUploading={false}
+              selectedFile={selectedFile}
             />
-            <Button 
-              onClick={handleImageAnalyze}
-              disabled={!selectedFile || isAnalyzing}
-              className="w-full"
-            >
-              {isAnalyzing ? 'Analyzing...' : 'Analyze Image'}
-            </Button>
+            {selectedFile && (
+              <Button 
+                onClick={handleImageAnalyze}
+                disabled={isAnalyzing}
+                className="w-full"
+                size="lg"
+              >
+                <Sparkles className="w-4 h-4 mr-2" />
+                {isAnalyzing ? 'Analyzing...' : 'Analyze Image'}
+              </Button>
+            )}
           </TabsContent>
           
           <TabsContent value="search" className="space-y-4">
@@ -94,7 +103,9 @@ export function ProductInput({ onAnalyze, isAnalyzing }: ProductInputProps) {
               onClick={handleTextAnalyze}
               disabled={!productName.trim() || isAnalyzing}
               className="w-full"
+              size="lg"
             >
+              <Sparkles className="w-4 h-4 mr-2" />
               {isAnalyzing ? 'Analyzing...' : 'Analyze Product'}
             </Button>
           </TabsContent>

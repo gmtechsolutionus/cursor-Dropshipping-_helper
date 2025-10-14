@@ -24,37 +24,38 @@ export default function Dashboard() {
     try {
       if (data.image) {
         // Handle image upload
-        const reader = new FileReader();
-        reader.readAsDataURL(data.image);
-        
-        reader.onload = async () => {
-          const base64 = reader.result?.toString().split(',')[1];
-          
-          if (!base64) {
-            throw new Error('Failed to convert image to base64');
-          }
+        const base64 = await new Promise<string>((resolve, reject) => {
+          const reader = new FileReader();
+          reader.readAsDataURL(data.image!);
+          reader.onload = () => {
+            const result = reader.result?.toString().split(',')[1];
+            if (result) {
+              resolve(result);
+            } else {
+              reject(new Error('Failed to convert image to base64'));
+            }
+          };
+          reader.onerror = () => reject(new Error('Failed to read image file'));
+        });
 
-          const response = await fetch('/api/analyze-image', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ imageBase64: base64 }),
-          });
+        const response = await fetch('/api/analyze-image', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ imageBase64: base64 }),
+        });
 
-          if (!response.ok) {
-            throw new Error('Failed to analyze image');
-          }
+        if (!response.ok) {
+          const error = await response.json();
+          throw new Error(error.details || 'Failed to analyze image');
+        }
 
-          const analysisData = await response.json();
-          setProductAnalysis(analysisData);
-          toast.success('Product analyzed successfully!', { id: toastId });
-          setActiveTab('results');
-        };
-
-        reader.onerror = () => {
-          throw new Error('Failed to read image file');
-        };
+        const analysisData = await response.json();
+        setProductAnalysis(analysisData);
+        toast.success('Product analyzed successfully!', { id: toastId });
+        setActiveTab('results');
+        setIsAnalyzing(false);
       } else if (data.productName) {
         // Handle text-based analysis
         const response = await fetch('/api/analyze-image', {
@@ -66,18 +67,19 @@ export default function Dashboard() {
         });
 
         if (!response.ok) {
-          throw new Error('Failed to analyze product');
+          const error = await response.json();
+          throw new Error(error.details || 'Failed to analyze product');
         }
 
         const analysisData = await response.json();
         setProductAnalysis(analysisData);
         toast.success('Product analyzed successfully!', { id: toastId });
         setActiveTab('results');
+        setIsAnalyzing(false);
       }
     } catch (error) {
       console.error('Error analyzing product:', error);
-      toast.error('Failed to analyze product. Please try again.', { id: toastId });
-    } finally {
+      toast.error(error instanceof Error ? error.message : 'Failed to analyze product. Please try again.', { id: toastId });
       setIsAnalyzing(false);
     }
   };
