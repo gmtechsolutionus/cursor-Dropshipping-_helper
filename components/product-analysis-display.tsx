@@ -280,7 +280,7 @@ export function ProductAnalysisDisplay({ analysis }: ProductAnalysisDisplayProps
     <div className="space-y-6">
       {/* Header with Export Buttons */}
       <div className="flex justify-between items-center">
-        <h2 className="text-3xl font-bold">{analysis.product_name}</h2>
+        <h2 className="text-3xl font-extrabold tracking-tight heading-gradient">{analysis.product_name}</h2>
         <div className="flex gap-2">
           <Button onClick={exportToPDF} variant="outline" size="sm">
             <Download className="h-4 w-4 mr-2" />
@@ -296,7 +296,7 @@ export function ProductAnalysisDisplay({ analysis }: ProductAnalysisDisplayProps
       {/* Advanced Analysis Tools - Moved to Top */}
       <Card>
         <CardHeader>
-          <CardTitle>{t.additionalTools}</CardTitle>
+          <CardTitle className="heading-gradient">{t.additionalTools}</CardTitle>
           <CardDescription>Get deeper insights into your product</CardDescription>
         </CardHeader>
         <CardContent>
@@ -304,7 +304,7 @@ export function ProductAnalysisDisplay({ analysis }: ProductAnalysisDisplayProps
             <Button
               onClick={handleFetchTopProducts}
               disabled={loadingStates.topProducts}
-              className="flex items-center gap-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+              className="flex items-center gap-2"
             >
               <Star className="h-4 w-4" />
               {loadingStates.topProducts ? t.fetchingProducts : t.fetchProducts}
@@ -349,6 +349,148 @@ export function ProductAnalysisDisplay({ analysis }: ProductAnalysisDisplayProps
               <Package className="h-4 w-4" />
               {t.analyzeCompetitors}
             </Button>
+          </div>
+
+          {/* Inline Results Panel */}
+          <div className="mt-6 space-y-6">
+            {/* Top-Rated Products Inline */}
+            {topRatedProducts && topRatedProducts.products && topRatedProducts.products.length > 0 && (
+              <div>
+                <h3 className="text-xl font-semibold mb-2">⭐ {t.topRatedProducts}</h3>
+                <p className="text-sm text-muted-foreground mb-4">{t.topRatedProductsDesc}</p>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+                  {topRatedProducts.products.map((product: any, index: number) => (
+                    <a
+                      key={index}
+                      href={product.product_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="border rounded-lg overflow-hidden hover:shadow-lg transition-shadow bg-card"
+                    >
+                      <div className="aspect-square relative bg-gray-100 dark:bg-gray-800">
+                        <img
+                          src={product.image_url || 'https://via.placeholder.com/150'}
+                          alt={product.product_name}
+                          className="w-full h-full object-cover"
+                          onError={(e) => {
+                            e.currentTarget.src = 'https://via.placeholder.com/150?text=Product';
+                          }}
+                        />
+                      </div>
+                      <div className="p-3 space-y-2">
+                        <h4 className="font-medium text-sm line-clamp-2 hover:text-primary">{product.product_name}</h4>
+                        <div className="flex items-center justify-between">
+                          <p className="text-xl font-bold text-primary">${product.price.toFixed(2)}</p>
+                          <Badge variant="secondary" className="text-xs">{product.platform}</Badge>
+                        </div>
+                        <div className="flex items-center justify-between text-xs">
+                          <div className="flex items-center gap-1">
+                            <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
+                            <span>{product.rating} ({(product.reviews_count / 1000).toFixed(1)}k)</span>
+                          </div>
+                          {product.shipping_info && (
+                            <span className="text-muted-foreground truncate">
+                              {product.shipping_info.includes('Free') ? '📦 ' + t.freeShipping : product.shipping_info}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    </a>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Other Analyses Inline via Tabs */}
+            {(priceComparison || supplierVerification || shippingEstimate || reviewSummary || seoDescription || competitorAnalysis) && (
+              <Tabs defaultValue="price" className="w-full">
+                <TabsList className="grid w-full grid-cols-6">
+                  {priceComparison && <TabsTrigger value="price">Prices</TabsTrigger>}
+                  {supplierVerification && <TabsTrigger value="supplier">Supplier</TabsTrigger>}
+                  {shippingEstimate && <TabsTrigger value="shipping">Shipping</TabsTrigger>}
+                  {reviewSummary && <TabsTrigger value="reviews">Reviews</TabsTrigger>}
+                  {seoDescription && <TabsTrigger value="seo">SEO</TabsTrigger>}
+                  {competitorAnalysis && <TabsTrigger value="competitors">Competitors</TabsTrigger>}
+                </TabsList>
+
+                {priceComparison && (
+                  <TabsContent value="price">
+                    <div className="space-y-3">
+                      {priceComparison.comparisons.map((comp, index) => (
+                        <div key={index} className="border rounded-lg p-3">
+                          <div className="flex justify-between items-center">
+                            <div>
+                              <h4 className="font-medium">{comp.supplier}</h4>
+                              <p className="text-sm text-muted-foreground">{comp.platform}</p>
+                            </div>
+                            <div className="text-right">
+                              <p className="font-semibold">${comp.total_cost}</p>
+                              <p className="text-xs text-muted-foreground">${comp.price} + ${comp.shipping_cost} shipping</p>
+                            </div>
+                          </div>
+                          <div className="mt-2 flex justify-between text-sm">
+                            <span>{comp.delivery_time}</span>
+                            <Badge variant={comp.in_stock ? 'default' : 'destructive'}>
+                              {comp.in_stock ? 'In Stock' : 'Out of Stock'}
+                            </Badge>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </TabsContent>
+                )}
+
+                {seoDescription && (
+                  <TabsContent value="seo">
+                    <div className="space-y-4">
+                      <div>
+                        <div className="flex justify-between items-center mb-2">
+                          <h4 className="font-medium">Title</h4>
+                          <Button size="sm" variant="ghost" onClick={() => copyToClipboard(seoDescription.title)}>
+                            <Copy className="h-4 w-4" />
+                          </Button>
+                        </div>
+                        <p className="text-muted-foreground">{seoDescription.title}</p>
+                      </div>
+                      <div>
+                        <div className="flex justify-between items-center mb-2">
+                          <h4 className="font-medium">Meta Description</h4>
+                          <Button size="sm" variant="ghost" onClick={() => copyToClipboard(seoDescription.meta_description)}>
+                            <Copy className="h-4 w-4" />
+                          </Button>
+                        </div>
+                        <p className="text-muted-foreground">{seoDescription.meta_description}</p>
+                      </div>
+                      <div>
+                        <div className="flex justify-between items-center mb-2">
+                          <h4 className="font-medium">Product Description</h4>
+                          <Button size="sm" variant="ghost" onClick={() => copyToClipboard(seoDescription.product_description)}>
+                            <Copy className="h-4 w-4" />
+                          </Button>
+                        </div>
+                        <p className="text-muted-foreground whitespace-pre-wrap">{seoDescription.product_description}</p>
+                      </div>
+                      <div>
+                        <h4 className="font-medium mb-2">Bullet Points</h4>
+                        <ul className="list-disc list-inside space-y-1">
+                          {seoDescription.bullet_points.map((point, index) => (
+                            <li key={index} className="text-muted-foreground">{point}</li>
+                          ))}
+                        </ul>
+                      </div>
+                      <div>
+                        <h4 className="font-medium mb-2">Keywords</h4>
+                        <div className="flex flex-wrap gap-2">
+                          {seoDescription.keywords.map((keyword, index) => (
+                            <Badge key={index} variant="secondary">{keyword}</Badge>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </TabsContent>
+                )}
+              </Tabs>
+            )}
           </div>
         </CardContent>
       </Card>
@@ -492,64 +634,6 @@ export function ProductAnalysisDisplay({ analysis }: ProductAnalysisDisplayProps
         </Card>
       )}
 
-      {/* Top-Rated Products Section */}
-      {topRatedProducts && topRatedProducts.products && topRatedProducts.products.length > 0 && (
-        <Card>
-          <CardHeader>
-            <CardTitle>⭐ {t.topRatedProducts}</CardTitle>
-            <CardDescription>{t.topRatedProductsDesc}</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
-              {topRatedProducts.products.map((product: any, index: number) => (
-                <a 
-                  key={index} 
-                  href={product.product_url} 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="border rounded-lg overflow-hidden hover:shadow-lg transition-shadow bg-card"
-                >
-                  <div className="aspect-square relative bg-gray-100 dark:bg-gray-800">
-                    <img 
-                      src={product.image_url || 'https://via.placeholder.com/150'} 
-                      alt={product.product_name}
-                      className="w-full h-full object-cover"
-                      onError={(e) => {
-                        e.currentTarget.src = 'https://via.placeholder.com/150?text=Product';
-                      }}
-                    />
-                  </div>
-                  <div className="p-3 space-y-2">
-                    <h4 className="font-medium text-sm line-clamp-2 hover:text-primary">
-                      {product.product_name}
-                    </h4>
-                    <div className="flex items-center justify-between">
-                      <p className="text-xl font-bold text-primary">
-                        ${product.price.toFixed(2)}
-                      </p>
-                      <Badge variant="secondary" className="text-xs">
-                        {product.platform}
-                      </Badge>
-                    </div>
-                    <div className="flex items-center justify-between text-xs">
-                      <div className="flex items-center gap-1">
-                        <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
-                        <span>{product.rating} ({(product.reviews_count / 1000).toFixed(1)}k)</span>
-                      </div>
-                      {product.shipping_info && (
-                        <span className="text-muted-foreground truncate">
-                          {product.shipping_info.includes('Free') ? '📦 ' + t.freeShipping : product.shipping_info}
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                </a>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      )}
-
       {/* Logistics Information */}
       {analysis.logistics && (
         <Card>
@@ -584,126 +668,7 @@ export function ProductAnalysisDisplay({ analysis }: ProductAnalysisDisplayProps
         </Card>
       )}
 
-      {/* Analysis Results */}
-      {(priceComparison || supplierVerification || shippingEstimate || reviewSummary || seoDescription || competitorAnalysis) && (
-        <Tabs defaultValue="price" className="w-full">
-          <TabsList className="grid w-full grid-cols-6">
-            {priceComparison && <TabsTrigger value="price">Prices</TabsTrigger>}
-            {supplierVerification && <TabsTrigger value="supplier">Supplier</TabsTrigger>}
-            {shippingEstimate && <TabsTrigger value="shipping">Shipping</TabsTrigger>}
-            {reviewSummary && <TabsTrigger value="reviews">Reviews</TabsTrigger>}
-            {seoDescription && <TabsTrigger value="seo">SEO</TabsTrigger>}
-            {competitorAnalysis && <TabsTrigger value="competitors">Competitors</TabsTrigger>}
-          </TabsList>
-
-          {priceComparison && (
-            <TabsContent value="price">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Price Comparison</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-3">
-                    {priceComparison.comparisons.map((comp, index) => (
-                      <div key={index} className="border rounded-lg p-3">
-                        <div className="flex justify-between items-center">
-                          <div>
-                            <h4 className="font-medium">{comp.supplier}</h4>
-                            <p className="text-sm text-muted-foreground">{comp.platform}</p>
-                          </div>
-                          <div className="text-right">
-                            <p className="font-semibold">${comp.total_cost}</p>
-                            <p className="text-xs text-muted-foreground">
-                              ${comp.price} + ${comp.shipping_cost} shipping
-                            </p>
-                          </div>
-                        </div>
-                        <div className="mt-2 flex justify-between text-sm">
-                          <span>{comp.delivery_time}</span>
-                          <Badge variant={comp.in_stock ? "default" : "destructive"}>
-                            {comp.in_stock ? "In Stock" : "Out of Stock"}
-                          </Badge>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-          )}
-
-          {seoDescription && (
-            <TabsContent value="seo">
-              <Card>
-                <CardHeader>
-                  <CardTitle>SEO Optimized Description</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div>
-                    <div className="flex justify-between items-center mb-2">
-                      <h4 className="font-medium">Title</h4>
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        onClick={() => copyToClipboard(seoDescription.title)}
-                      >
-                        <Copy className="h-4 w-4" />
-                      </Button>
-                    </div>
-                    <p className="text-muted-foreground">{seoDescription.title}</p>
-                  </div>
-                  
-                  <div>
-                    <div className="flex justify-between items-center mb-2">
-                      <h4 className="font-medium">Meta Description</h4>
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        onClick={() => copyToClipboard(seoDescription.meta_description)}
-                      >
-                        <Copy className="h-4 w-4" />
-                      </Button>
-                    </div>
-                    <p className="text-muted-foreground">{seoDescription.meta_description}</p>
-                  </div>
-                  
-                  <div>
-                    <div className="flex justify-between items-center mb-2">
-                      <h4 className="font-medium">Product Description</h4>
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        onClick={() => copyToClipboard(seoDescription.product_description)}
-                      >
-                        <Copy className="h-4 w-4" />
-                      </Button>
-                    </div>
-                    <p className="text-muted-foreground whitespace-pre-wrap">{seoDescription.product_description}</p>
-                  </div>
-                  
-                  <div>
-                    <h4 className="font-medium mb-2">Bullet Points</h4>
-                    <ul className="list-disc list-inside space-y-1">
-                      {seoDescription.bullet_points.map((point, index) => (
-                        <li key={index} className="text-muted-foreground">{point}</li>
-                      ))}
-                    </ul>
-                  </div>
-                  
-                  <div>
-                    <h4 className="font-medium mb-2">Keywords</h4>
-                    <div className="flex flex-wrap gap-2">
-                      {seoDescription.keywords.map((keyword, index) => (
-                        <Badge key={index} variant="secondary">{keyword}</Badge>
-                      ))}
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-          )}
-        </Tabs>
-      )}
+      {/* Inline results now shown above in the Advance Analysis Tools card */}
     </div>
   );
 }

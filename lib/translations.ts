@@ -92,7 +92,7 @@ export const translations = {
     viewSupplier: "View Supplier",
     
     // Additional Tools
-    additionalTools: "Additional Analysis Tools",
+    additionalTools: "Advance Analysis Tools",
     comparePrice: "Compare Prices",
     verifySupplier: "Verify Supplier",
     calcShipping: "Calculate Shipping",
@@ -209,7 +209,7 @@ export const translations = {
     viewSupplier: "查看供应商",
     
     // Additional Tools
-    additionalTools: "其他分析工具",
+    additionalTools: "高级分析工具",
     comparePrice: "比较价格",
     verifySupplier: "验证供应商",
     calcShipping: "计算运费",
