@@ -153,6 +153,44 @@ export const translations = {
     priceRange: "价格范围",
     average: "平均",
     estimatedPrice: "预估价格",
+    
+    // Pricing Strategy
+    pricingStrategy: "定价策略与利润分析",
+    pricingStrategyDesc: "通过智能定价最大化您的利润空间",
+    wholesalePricing: "批发价格",
+    suggestedRetail: "建议零售价",
+    profitMargin: "利润率",
+    perUnit: "每件",
+    marketPosition: "市场定位",
+    competitivePrice: "市场竞争价格",
+    
+    // Market Analysis
+    marketAnalysis: "市场分析与需求",
+    marketAnalysisDesc: "了解市场趋势和机会",
+    demandLevel: "需求水平",
+    competition: "竞争",
+    bestPricePoint: "最佳价格点",
+    targetDemo: "目标人群",
+    seasonalTrends: "季节性趋势",
+    
+    // Product Links
+    productLinks: "产品链接",
+    productLinksDesc: "来自所有平台的最佳价格和最高评分产品",
+    productsFound: "个产品",
+    shipping: "运费",
+    moq: "起订量",
+    units: "件",
+    visitProduct: "访问产品",
+    
+    // Logistics
+    logistics: "物流与运输信息",
+    logisticsDesc: "国际运输的重要细节",
+    packaging: "包装",
+    shippingWeight: "运输重量",
+    dimensions: "尺寸",
+    customsClass: "海关分类",
+    importDuties: "进口关税估算",
+    
     affiliateLinks: "联盟链接",
     supplierOptions: "供应商选项",
     platform: "平台",
