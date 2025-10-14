@@ -288,6 +288,18 @@ SEARCH CRITERIA:
 - Focus on popular platforms: AliExpress, Amazon, eBay, Walmart, DHgate, Banggood
 - Include best deals and competitive pricing
 
+CRITICAL URL REQUIREMENT:
+- You MUST return an ACTUAL product page URL from the stated platform (no generic homepage, no shortened links).
+- Use canonical product URL formats:
+  - AliExpress: https://www.aliexpress.com/item/ or https://www.aliexpress.com/i/
+  - Amazon: https://www.amazon.com/dp/ASIN or https://www.amazon.com/gp/product/ASIN
+  - eBay: https://www.ebay.com/itm/ITEMID
+  - Walmart: https://www.walmart.com/ip/ITEMID
+  - DHgate: https://www.dhgate.com/product/...
+  - Banggood: https://www.banggood.com/...-p-<ID>.html
+  - Alibaba: https://www.alibaba.com/product-detail/... or /offer/ID.html
+- If you cannot find a direct product URL that matches the platform, provide a search URL for that platform with the product keywords.
+
 For EACH of the 10 products provide:
 - image_url: Direct product image URL (use generic placeholder if needed like https://via.placeholder.com/150)
 - product_name: Exact product title from platform

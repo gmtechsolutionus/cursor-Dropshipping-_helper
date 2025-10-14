@@ -37,6 +37,86 @@ export async function POST(request: NextRequest) {
       }
     }
 
+    // Normalize product URLs to ensure real, clickable links per platform
+    const normalizePlatform = (platform: string | undefined) => {
+      if (!platform) return '';
+      const key = platform.toLowerCase();
+      if (key.includes('aliexpress')) return 'aliexpress';
+      if (key.includes('amazon')) return 'amazon';
+      if (key.includes('ebay')) return 'ebay';
+      if (key.includes('walmart')) return 'walmart';
+      if (key.includes('dhgate')) return 'dhgate';
+      if (key.includes('banggood')) return 'banggood';
+      if (key.includes('alibaba')) return 'alibaba';
+      return key;
+    };
+
+    const isValidProductUrlForPlatform = (platformKey: string, urlString: string | undefined) => {
+      if (!urlString) return false;
+      try {
+        const u = new URL(urlString);
+        const host = u.hostname.toLowerCase();
+        const path = u.pathname.toLowerCase();
+
+        switch (platformKey) {
+          case 'aliexpress':
+            return /aliexpress\.(com|us|ru)$/.test(host) || host.endsWith('.aliexpress.com')
+              ? (path.includes('/item/') || path.startsWith('/i/'))
+              : false;
+          case 'amazon':
+            return host.includes('amazon.') && (path.includes('/dp/') || path.includes('/gp/product/'));
+          case 'ebay':
+            return host.includes('ebay.') && path.includes('/itm/');
+          case 'walmart':
+            return host.includes('walmart.com') && path.includes('/ip/');
+          case 'dhgate':
+            return host.includes('dhgate.com') && path.includes('/product/');
+          case 'banggood':
+            return host.includes('banggood.com') && (/\-p-\d+\.html$/.test(path) || path.includes('/product/'));
+          case 'alibaba':
+            return host.includes('alibaba.com') && (path.includes('/product-detail/') || path.includes('/offer/'));
+          default:
+            // Fallback: ensure it is a valid https URL
+            return u.protocol === 'https:';
+        }
+      } catch {
+        return false;
+      }
+    };
+
+    const buildSearchUrl = (platformKey: string, name: string) => {
+      const q = encodeURIComponent(name);
+      switch (platformKey) {
+        case 'aliexpress':
+          return `https://www.aliexpress.com/wholesale?SearchText=${q}`;
+        case 'amazon':
+          return `https://www.amazon.com/s?k=${q}`;
+        case 'ebay':
+          return `https://www.ebay.com/sch/i.html?_nkw=${q}`;
+        case 'walmart':
+          return `https://www.walmart.com/search?q=${q}`;
+        case 'dhgate':
+          return `https://www.dhgate.com/wholesale/search.do?act=search&searchkey=${q}`;
+        case 'banggood':
+          return `https://www.banggood.com/search/${q}.html`;
+        case 'alibaba':
+          return `https://www.alibaba.com/trade/search?fsb=y&IndexArea=product_en&SearchText=${q}`;
+        default:
+          return `https://www.google.com/search?q=${q}`;
+      }
+    };
+
+    if (Array.isArray(productsData?.products)) {
+      productsData.products = productsData.products.map((p: any) => {
+        const platformKey = normalizePlatform(p.platform);
+        const hasValidUrl = isValidProductUrlForPlatform(platformKey, p.product_url);
+        return {
+          ...p,
+          product_url: hasValidUrl ? p.product_url : buildSearchUrl(platformKey, p.product_name || productName),
+        };
+      });
+    }
+
     return NextResponse.json(productsData);
   } catch (error) {
     console.error('Error fetching products:', error);
