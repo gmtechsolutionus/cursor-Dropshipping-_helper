@@ -24,6 +24,7 @@ export function ProductAnalysisDisplay({ analysis }: ProductAnalysisDisplayProps
   const [reviewSummary, setReviewSummary] = useState<ReviewSummary | null>(null);
   const [seoDescription, setSeoDescription] = useState<SEODescription | null>(null);
   const [competitorAnalysis, setCompetitorAnalysis] = useState<CompetitorAnalysis | null>(null);
+  const [topRatedProducts, setTopRatedProducts] = useState<any>(null);
   const [loadingStates, setLoadingStates] = useState<Record<string, boolean>>({});
 
   const handlePriceComparison = async () => {
@@ -167,6 +168,28 @@ export function ProductAnalysisDisplay({ analysis }: ProductAnalysisDisplayProps
     }
   };
 
+  const handleFetchTopProducts = async () => {
+    setLoadingStates(prev => ({ ...prev, topProducts: true }));
+    try {
+      const response = await fetch('/api/fetch-products', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          productName: analysis.product_name
+        })
+      });
+      
+      if (!response.ok) throw new Error('Failed to fetch products');
+      const data = await response.json();
+      setTopRatedProducts(data);
+      toast.success('Top-rated products loaded!');
+    } catch (error) {
+      toast.error('Failed to fetch products');
+    } finally {
+      setLoadingStates(prev => ({ ...prev, topProducts: false }));
+    }
+  };
+
   const exportToPDF = () => {
     const doc = new jsPDF();
     let yPosition = 20;
@@ -279,6 +302,14 @@ export function ProductAnalysisDisplay({ analysis }: ProductAnalysisDisplayProps
         <CardContent>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
             <Button
+              onClick={handleFetchTopProducts}
+              disabled={loadingStates.topProducts}
+              className="flex items-center gap-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+            >
+              <Star className="h-4 w-4" />
+              {loadingStates.topProducts ? t.fetchingProducts : t.fetchProducts}
+            </Button>
+            <Button
               onClick={handlePriceComparison}
               disabled={loadingStates.price}
               className="flex items-center gap-2"
@@ -321,6 +352,64 @@ export function ProductAnalysisDisplay({ analysis }: ProductAnalysisDisplayProps
           </div>
         </CardContent>
       </Card>
+
+      {/* Top-Rated Products Section */}
+      {topRatedProducts && topRatedProducts.products && topRatedProducts.products.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle>⭐ {t.topRatedProducts}</CardTitle>
+            <CardDescription>{t.topRatedProductsDesc}</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+              {topRatedProducts.products.map((product: any, index: number) => (
+                <a 
+                  key={index} 
+                  href={product.product_url} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="border rounded-lg overflow-hidden hover:shadow-lg transition-shadow bg-card"
+                >
+                  <div className="aspect-square relative bg-gray-100 dark:bg-gray-800">
+                    <img 
+                      src={product.image_url || 'https://via.placeholder.com/150'} 
+                      alt={product.product_name}
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        e.currentTarget.src = 'https://via.placeholder.com/150?text=Product';
+                      }}
+                    />
+                  </div>
+                  <div className="p-3 space-y-2">
+                    <h4 className="font-medium text-sm line-clamp-2 hover:text-primary">
+                      {product.product_name}
+                    </h4>
+                    <div className="flex items-center justify-between">
+                      <p className="text-xl font-bold text-primary">
+                        ${product.price.toFixed(2)}
+                      </p>
+                      <Badge variant="secondary" className="text-xs">
+                        {product.platform}
+                      </Badge>
+                    </div>
+                    <div className="flex items-center justify-between text-xs">
+                      <div className="flex items-center gap-1">
+                        <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
+                        <span>{product.rating} ({(product.reviews_count / 1000).toFixed(1)}k)</span>
+                      </div>
+                      {product.shipping_info && (
+                        <span className="text-muted-foreground truncate">
+                          {product.shipping_info.includes('Free') ? '📦 ' + t.freeShipping : product.shipping_info}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </a>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Product Image */}
       {analysis.product_image && (

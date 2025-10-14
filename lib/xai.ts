@@ -278,3 +278,43 @@ IMPORTANT: You must respond with ONLY a valid JSON object. Do not include any ma
 
   return await generateWithGrok(prompt);
 }
+
+export async function generateTopRatedProducts(productName: string) {
+  const prompt = `Find the TOP 10 HIGHEST-RATED products matching "${productName}" across multiple e-commerce platforms.
+
+SEARCH CRITERIA:
+- Rating must be >= 4.5 out of 5 stars
+- Must have at least 100+ reviews
+- Focus on popular platforms: AliExpress, Amazon, eBay, Walmart, DHgate, Banggood
+- Include best deals and competitive pricing
+
+For EACH of the 10 products provide:
+- image_url: Direct product image URL (use generic placeholder if needed like https://via.placeholder.com/150)
+- product_name: Exact product title from platform
+- product_url: Direct link to product page (use generic/searchable URL format)
+- price: Current price in USD (number with 2 decimals)
+- platform: Platform name (AliExpress, Amazon, eBay, etc.)
+- rating: Product rating (must be >= 4.5)
+- reviews_count: Number of reviews (prefer 100+)
+- shipping_info: Shipping time estimate (e.g., "2-5 days", "Free shipping")
+
+IMPORTANT: You must respond with ONLY a valid JSON object. Do not include any markdown formatting, code blocks, or additional text. Start your response with { and end with }.
+
+Output format:
+{
+  "products": [
+    {
+      "image_url": "https://example.com/image.jpg",
+      "product_name": "Product Name",
+      "product_url": "https://platform.com/product",
+      "price": 29.99,
+      "platform": "AliExpress",
+      "rating": 4.8,
+      "reviews_count": 1500,
+      "shipping_info": "Free shipping, 3-7 days"
+    }
+  ]
+}`;
+
+  return await generateWithGrok(prompt);
+}

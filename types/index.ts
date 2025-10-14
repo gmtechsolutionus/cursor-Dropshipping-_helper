@@ -57,6 +57,18 @@ export interface ProductAnalysis {
     customs_classification: string;
     import_duties_estimate: string;
   };
+  top_rated_products?: TopRatedProduct[];
+}
+
+export interface TopRatedProduct {
+  image_url: string;
+  product_name: string;
+  product_url: string;
+  price: number;
+  platform: string;
+  rating: number;
+  reviews_count: number;
+  shipping_info?: string;
 }
 
 export interface PriceComparison {

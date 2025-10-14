@@ -100,6 +100,14 @@ export const translations = {
     generateSEO: "Generate SEO",
     analyzeCompetitors: "Analyze Competitors",
     
+    // Top Rated Products
+    topRatedProducts: "Top-Rated Product Pricing",
+    topRatedProductsDesc: "Best deals from top-rated products across all platforms",
+    fetchProducts: "Fetch Top Products",
+    fetchingProducts: "Fetching products...",
+    noProducts: "No products found",
+    freeShipping: "Free shipping",
+    
     // Messages
     uploadSuccess: "Product analyzed successfully!",
     uploadError: "Failed to analyze product. Please try again.",
@@ -208,6 +216,14 @@ export const translations = {
     analyzeReviews: "分析评论",
     generateSEO: "生成SEO",
     analyzeCompetitors: "分析竞争对手",
+    
+    // Top Rated Products
+    topRatedProducts: "高评分产品定价",
+    topRatedProductsDesc: "来自所有平台的高评分产品最佳优惠",
+    fetchProducts: "获取热门产品",
+    fetchingProducts: "正在获取产品...",
+    noProducts: "未找到产品",
+    freeShipping: "包邮",
     
     // Messages
     uploadSuccess: "产品分析成功！",
