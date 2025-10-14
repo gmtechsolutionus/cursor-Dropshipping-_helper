@@ -35,12 +35,34 @@ export async function POST(request: NextRequest) {
       productAnalysis = JSON.parse(analysisResult);
     } catch (parseError) {
       console.error('Failed to parse xAI response:', analysisResult);
-      // Fallback: try to extract JSON from the response
-      const jsonMatch = analysisResult.match(/\{[\s\S]*\}/);
-      if (jsonMatch) {
-        productAnalysis = JSON.parse(jsonMatch[0]);
+      
+      // Try multiple extraction methods
+      let extractedJson = null;
+      
+      // Method 1: Extract from markdown code blocks
+      const markdownMatch = analysisResult.match(/```(?:json)?\s*(\{[\s\S]*?\})\s*```/);
+      if (markdownMatch) {
+        extractedJson = markdownMatch[1];
+      }
+      
+      // Method 2: Find JSON object (first { to last })
+      if (!extractedJson) {
+        const firstBrace = analysisResult.indexOf('{');
+        const lastBrace = analysisResult.lastIndexOf('}');
+        if (firstBrace !== -1 && lastBrace !== -1 && lastBrace > firstBrace) {
+          extractedJson = analysisResult.substring(firstBrace, lastBrace + 1);
+        }
+      }
+      
+      if (extractedJson) {
+        try {
+          productAnalysis = JSON.parse(extractedJson);
+        } catch (e) {
+          console.error('Failed to parse extracted JSON:', extractedJson);
+          throw new Error('Invalid response format from xAI - could not parse JSON');
+        }
       } else {
-        throw new Error('Invalid response format from xAI');
+        throw new Error('Invalid response format from xAI - no JSON found');
       }
     }
 

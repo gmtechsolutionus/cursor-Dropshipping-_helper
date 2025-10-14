@@ -22,7 +22,9 @@ export async function analyzeProductImage(imageBase64: string) {
         content: [
           {
             type: 'text',
-            text: `Analyze this product image: Identify the exact item, brand, model, key features, materials, dimensions, and suggest dropshipping suppliers/pricing from major platforms like AliExpress/Amazon. Output in JSON format with the following structure:
+            text: `Analyze this product image: Identify the exact item, brand, model, key features, materials, dimensions, and suggest dropshipping suppliers/pricing from major platforms like AliExpress/Amazon.
+
+IMPORTANT: Return ONLY a valid JSON object, no additional text or markdown. Output in JSON format with the following structure:
             {
               "product_name": "string",
               "description": "string",
@@ -71,6 +73,7 @@ export async function analyzeProductImage(imageBase64: string) {
     ],
     temperature: 0.7,
     max_tokens: 2048,
+    response_format: { type: 'json_object' },
   });
 
   return response.choices[0].message.content;
@@ -88,15 +91,16 @@ export async function generateWithGrok(prompt: string) {
     ],
     temperature: 0.7,
     max_tokens: 2048,
+    response_format: { type: 'json_object' },
   });
 
   return response.choices[0].message.content;
 }
 
 export async function analyzeProductByName(productName: string) {
-  const prompt = `Analyze the product "${productName}" for dropshipping. Research and provide comprehensive information about this product including brand, model, key features, materials, typical dimensions, and suggest dropshipping suppliers/pricing from major platforms like AliExpress/Amazon. 
+  const prompt = `Analyze the product "${productName}" for dropshipping. Research and provide comprehensive information about this product including brand, model, key features, materials, typical dimensions, and suggest dropshipping suppliers/pricing from major platforms like AliExpress/Amazon.
 
-  Output in JSON format with the following structure:
+IMPORTANT: Return ONLY a valid JSON object, no additional text or markdown. Output in JSON format with the following structure:
   {
     "product_name": "string",
     "description": "string",
