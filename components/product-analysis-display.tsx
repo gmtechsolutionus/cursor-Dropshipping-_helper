@@ -270,6 +270,58 @@ export function ProductAnalysisDisplay({ analysis }: ProductAnalysisDisplayProps
         </div>
       </div>
 
+      {/* Advanced Analysis Tools - Moved to Top */}
+      <Card>
+        <CardHeader>
+          <CardTitle>{t.additionalTools}</CardTitle>
+          <CardDescription>Get deeper insights into your product</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+            <Button
+              onClick={handlePriceComparison}
+              disabled={loadingStates.price}
+              className="flex items-center gap-2"
+            >
+              <TrendingUp className="h-4 w-4" />
+              {t.comparePrice}
+            </Button>
+            <Button
+              onClick={handleShippingEstimate}
+              disabled={loadingStates.shipping}
+              className="flex items-center gap-2"
+            >
+              <Truck className="h-4 w-4" />
+              {t.calcShipping}
+            </Button>
+            <Button
+              onClick={handleReviewAnalysis}
+              disabled={loadingStates.reviews}
+              className="flex items-center gap-2"
+            >
+              <Star className="h-4 w-4" />
+              {t.analyzeReviews}
+            </Button>
+            <Button
+              onClick={handleSEOGeneration}
+              disabled={loadingStates.seo}
+              className="flex items-center gap-2"
+            >
+              <Search className="h-4 w-4" />
+              {t.generateSEO}
+            </Button>
+            <Button
+              onClick={handleCompetitorAnalysis}
+              disabled={loadingStates.competitors}
+              className="flex items-center gap-2"
+            >
+              <Package className="h-4 w-4" />
+              {t.analyzeCompetitors}
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+
       {/* Product Image */}
       {analysis.product_image && (
         <Card>
@@ -409,72 +461,6 @@ export function ProductAnalysisDisplay({ analysis }: ProductAnalysisDisplayProps
         </Card>
       )}
 
-      {/* Product Links */}
-      <Card>
-        <CardHeader>
-          <CardTitle>🔗 {t.productLinks} ({analysis.supplier_options.length} {t.productsFound})</CardTitle>
-          <CardDescription>{t.productLinksDesc}</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            {analysis.supplier_options.map((supplier, index) => (
-              <div key={index} className="border rounded-lg p-4 space-y-3 hover:shadow-md transition-shadow">
-                <div className="flex justify-between items-start">
-                  <div>
-                    <h4 className="font-medium text-lg">{supplier.name}</h4>
-                    <div className="flex items-center gap-2 mt-1">
-                      <Badge>{supplier.platform}</Badge>
-                      {supplier.location && <span className="text-xs text-muted-foreground">📍 {supplier.location}</span>}
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <p className="font-semibold text-2xl text-primary">${supplier.price}</p>
-                    {supplier.shipping_cost && supplier.shipping_cost > 0 && (
-                      <p className="text-xs text-muted-foreground">+ ${supplier.shipping_cost} {t.shipping}</p>
-                    )}
-                  </div>
-                </div>
-                
-                <div className="grid grid-cols-2 gap-2 text-sm">
-                  <div className="flex items-center gap-1">
-                    <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                    <span>{supplier.rating} ({supplier.reviews_count.toLocaleString()} {t.reviews})</span>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <Truck className="h-4 w-4" />
-                    <span>{supplier.shipping_time}</span>
-                  </div>
-                  {supplier.moq && supplier.moq > 1 && (
-                    <div className="flex items-center gap-1">
-                      <Package className="h-4 w-4" />
-                      <span>{t.moq}: {supplier.moq} {t.units}</span>
-                    </div>
-                  )}
-                  {supplier.payment_methods && (
-                    <div className="flex items-center gap-1 text-xs">
-                      💳 {supplier.payment_methods}
-                    </div>
-                  )}
-                </div>
-
-                {supplier.return_policy && (
-                  <p className="text-xs text-muted-foreground">🔄 {supplier.return_policy}</p>
-                )}
-
-                <div className="flex gap-2">
-                  <Button size="sm" variant="default" className="flex-1" asChild>
-                    <a href={supplier.url} target="_blank" rel="noopener noreferrer">
-                      <ExternalLink className="h-4 w-4 mr-1" />
-                      {t.visitProduct}
-                    </a>
-                  </Button>
-                </div>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-
       {/* Logistics Information */}
       {analysis.logistics && (
         <Card>
@@ -508,58 +494,6 @@ export function ProductAnalysisDisplay({ analysis }: ProductAnalysisDisplayProps
           </CardContent>
         </Card>
       )}
-
-      {/* Analysis Tools */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Advanced Analysis Tools</CardTitle>
-          <CardDescription>Get deeper insights into your product</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-            <Button
-              onClick={handlePriceComparison}
-              disabled={loadingStates.price}
-              className="flex items-center gap-2"
-            >
-              <TrendingUp className="h-4 w-4" />
-              Compare Prices
-            </Button>
-            <Button
-              onClick={handleShippingEstimate}
-              disabled={loadingStates.shipping}
-              className="flex items-center gap-2"
-            >
-              <Truck className="h-4 w-4" />
-              Shipping Estimate
-            </Button>
-            <Button
-              onClick={handleReviewAnalysis}
-              disabled={loadingStates.reviews}
-              className="flex items-center gap-2"
-            >
-              <Star className="h-4 w-4" />
-              Analyze Reviews
-            </Button>
-            <Button
-              onClick={handleSEOGeneration}
-              disabled={loadingStates.seo}
-              className="flex items-center gap-2"
-            >
-              <Search className="h-4 w-4" />
-              Generate SEO
-            </Button>
-            <Button
-              onClick={handleCompetitorAnalysis}
-              disabled={loadingStates.competitors}
-              className="flex items-center gap-2"
-            >
-              <Package className="h-4 w-4" />
-              Competitor Analysis
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
 
       {/* Analysis Results */}
       {(priceComparison || supplierVerification || shippingEstimate || reviewSummary || seoDescription || competitorAnalysis) && (
