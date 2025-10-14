@@ -10,12 +10,15 @@ import { ProductAnalysis } from '@/types';
 import toast from 'react-hot-toast';
 import { Moon, Sun, Package, TrendingUp, Shield, Truck, Star, Search } from 'lucide-react';
 import { useTheme } from 'next-themes';
+import { useLanguage } from '@/contexts/LanguageContext';
+import { LanguageSwitcher } from '@/components/language-switcher';
 
 export default function Dashboard() {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [productAnalysis, setProductAnalysis] = useState<ProductAnalysis | null>(null);
   const [activeTab, setActiveTab] = useState('analyze');
   const { theme, setTheme } = useTheme();
+  const { t } = useLanguage();
 
   const handleProductAnalyze = async (data: { image?: File; productName?: string }) => {
     setIsAnalyzing(true);
@@ -85,36 +88,39 @@ export default function Dashboard() {
   };
 
   const features = [
-    { icon: Package, title: 'Product Identification', description: 'AI-powered image recognition' },
-    { icon: TrendingUp, title: 'Price Comparison', description: 'Real-time market analysis' },
-    { icon: Shield, title: 'Supplier Verification', description: 'Scam detection & ratings' },
-    { icon: Truck, title: 'Shipping Calculator', description: 'Customs & delivery estimates' },
-    { icon: Star, title: 'Review Analysis', description: 'Fake review detection' },
-    { icon: Search, title: 'SEO Optimization', description: 'AI-generated descriptions' },
+    { icon: Package, title: t.features.productId, description: t.features.productIdDesc },
+    { icon: TrendingUp, title: t.features.priceComp, description: t.features.priceCompDesc },
+    { icon: Shield, title: t.features.supplierVerify, description: t.features.supplierVerifyDesc },
+    { icon: Truck, title: t.features.shippingCalc, description: t.features.shippingCalcDesc },
+    { icon: Star, title: t.features.reviewAnalysis, description: t.features.reviewAnalysisDesc },
+    { icon: Search, title: t.features.seoOptimization, description: t.features.seoOptimizationDesc },
   ];
 
   return (
     <div className="min-h-screen bg-background">
       <header className="border-b">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <h1 className="text-2xl font-bold">Dropshipping Helper</h1>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-          >
-            <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-            <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-          </Button>
+          <h1 className="text-2xl font-bold">{t.appTitle}</h1>
+          <div className="flex items-center gap-2">
+            <LanguageSwitcher />
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+            >
+              <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+              <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+            </Button>
+          </div>
         </div>
       </header>
 
       <main className="container mx-auto px-4 py-8">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
           <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="analyze">Analyze Product</TabsTrigger>
+            <TabsTrigger value="analyze">{t.analyzeProduct}</TabsTrigger>
             <TabsTrigger value="results" disabled={!productAnalysis}>
-              Results
+              {t.results}
             </TabsTrigger>
           </TabsList>
 

@@ -8,6 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Search, Upload, Sparkles } from 'lucide-react';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface ProductInputProps {
   onAnalyze: (data: { image?: File; productName?: string }) => void;
@@ -18,6 +19,7 @@ export function ProductInput({ onAnalyze, isAnalyzing }: ProductInputProps) {
   const [productName, setProductName] = useState('');
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [activeTab, setActiveTab] = useState('upload');
+  const { t } = useLanguage();
 
   const handleImageUpload = (file: File | null) => {
     setSelectedFile(file);
