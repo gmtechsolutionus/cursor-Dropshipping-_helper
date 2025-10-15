@@ -4,8 +4,15 @@ let xaiClient: OpenAI | null = null;
 
 function getXAIClient() {
   if (!xaiClient) {
+    const apiKey = process.env.XAI_API_KEY || process.env.NEXT_PUBLIC_XAI_API_KEY;
+    if (!apiKey) {
+      throw new Error(
+        'Missing XAI API key. Please set XAI_API_KEY (preferred) or NEXT_PUBLIC_XAI_API_KEY in your environment.'
+      );
+    }
+
     xaiClient = new OpenAI({
-      apiKey: process.env.NEXT_PUBLIC_XAI_API_KEY || '',
+      apiKey,
       baseURL: 'https://api.x.ai/v1',
     });
   }
