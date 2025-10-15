@@ -114,6 +114,11 @@ export const translations = {
     linkInvalid: "Link unavailable",
     linkValidated: "Links validated successfully!",
     linkValidationFailed: "Failed to validate links",
+    guaranteedLinks: "Top-Rated Links (Guaranteed)",
+    guaranteedLinksDesc: "Always-working search links to find this product on major platforms",
+    searchOn: "Search on",
+    usMarketsOnly: "US Markets Only",
+    allPlatforms: "All Platforms",
     
     // Messages
     uploadSuccess: "Product analyzed successfully!",
@@ -238,6 +243,11 @@ export const translations = {
     linkInvalid: "链接不可用",
     linkValidated: "链接验证成功！",
     linkValidationFailed: "链接验证失败",
+    guaranteedLinks: "高评分链接（保证可用）",
+    guaranteedLinksDesc: "可靠的搜索链接，在各大平台上查找此产品",
+    searchOn: "搜索于",
+    usMarketsOnly: "仅美国市场",
+    allPlatforms: "所有平台",
     
     // Messages
     uploadSuccess: "产品分析成功！",

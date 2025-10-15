@@ -6,11 +6,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
-import { Download, ExternalLink, Package, TrendingUp, Shield, Truck, Star, Search, FileText, Copy, RefreshCw, CheckCircle, AlertTriangle } from 'lucide-react';
+import { Download, ExternalLink, Package, TrendingUp, Shield, Truck, Star, Search, FileText, Copy, RefreshCw, CheckCircle, AlertTriangle, Link2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import jsPDF from 'jspdf';
 import Papa from 'papaparse';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { TopRatedLinks, TopRatedLinksCompact } from '@/components/top-rated-links';
 
 interface ProductAnalysisDisplayProps {
   analysis: ProductAnalysis;
@@ -26,6 +27,7 @@ export function ProductAnalysisDisplay({ analysis }: ProductAnalysisDisplayProps
   const [competitorAnalysis, setCompetitorAnalysis] = useState<CompetitorAnalysis | null>(null);
   const [topRatedProducts, setTopRatedProducts] = useState<any>(null);
   const [loadingStates, setLoadingStates] = useState<Record<string, boolean>>({});
+  const [showUSOnly, setShowUSOnly] = useState(true);
 
   const handlePriceComparison = async () => {
     setLoadingStates(prev => ({ ...prev, price: true }));
@@ -424,6 +426,40 @@ export function ProductAnalysisDisplay({ analysis }: ProductAnalysisDisplayProps
               </div>
             </div>
           )}
+
+          {/* Guaranteed Platform Links Section */}
+          <div className="mb-6 border-t pt-6">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h3 className="text-xl font-semibold flex items-center gap-2">
+                  <Link2 className="h-5 w-5" />
+                  {t.guaranteedLinks}
+                </h3>
+                <p className="text-sm text-muted-foreground mt-1">{t.guaranteedLinksDesc}</p>
+              </div>
+              <div className="flex items-center gap-2">
+                <Button
+                  variant={showUSOnly ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => setShowUSOnly(true)}
+                >
+                  {t.usMarketsOnly}
+                </Button>
+                <Button
+                  variant={!showUSOnly ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => setShowUSOnly(false)}
+                >
+                  {t.allPlatforms}
+                </Button>
+              </div>
+            </div>
+            <TopRatedLinks
+              productTitle={analysis.product_name}
+              productImage={analysis.product_image}
+              showUSOnly={showUSOnly}
+            />
+          </div>
 
           {/* Action buttons for tools */}
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
