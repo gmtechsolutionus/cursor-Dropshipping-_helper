@@ -152,10 +152,10 @@ IMPORTANT: You must respond with ONLY a valid JSON object. Do not include any ma
     max_tokens: 4096,
   });
 
-  return response.choices[0].message.content;
+  return response.choices[0].message.content || '';
 }
 
-export async function generateWithGrok(prompt: string) {
+export async function generateWithGrok(prompt: string): Promise<string> {
   const xai = getXAIClient();
   const response = await xai.chat.completions.create({
     model: 'grok-2-latest',
@@ -169,7 +169,7 @@ export async function generateWithGrok(prompt: string) {
     max_tokens: 4096,
   });
 
-  return response.choices[0].message.content;
+  return response.choices[0].message.content || '';
 }
 
 export async function analyzeProductByName(productName: string) {
@@ -295,24 +295,23 @@ SEARCH CRITERIA:
 - Focus on popular platforms: AliExpress, Amazon, eBay, Walmart, DHgate, Banggood
 - Include best deals and competitive pricing
 
-CRITICAL URL REQUIREMENT:
-- You MUST return an ACTUAL product page URL from the stated platform (no generic homepage, no shortened links).
-- Use canonical product URL formats:
-  - AliExpress: https://www.aliexpress.com/item/ or https://www.aliexpress.com/i/
-  - Amazon: https://www.amazon.com/dp/ASIN or https://www.amazon.com/gp/product/ASIN
-  - eBay: https://www.ebay.com/itm/ITEMID
-  - Walmart: https://www.walmart.com/ip/ITEMID
-  - DHgate: https://www.dhgate.com/product/...
-  - Banggood: https://www.banggood.com/...-p-<ID>.html
-  - Alibaba: https://www.alibaba.com/product-detail/... or /offer/ID.html
-- If you cannot find a direct product URL that matches the platform, provide a search URL for that platform with the product keywords.
+IMPORTANT INSTRUCTIONS FOR PRODUCT IDs and URLs:
+- For each product, provide a realistic product ID or ASIN that matches the platform's format
+- DO NOT make up complete URLs. Instead provide:
+  - product_id: The actual product identifier (ASIN for Amazon, item ID for eBay, etc.)
+  - Use realistic formats:
+    - Amazon ASIN: 10 characters (e.g., "B08N5WRWNW", "B09JQSQGXH")
+    - AliExpress: 10-12 digit number (e.g., "1005004834567890")
+    - eBay: 12-13 digit number (e.g., "234567890123")
+    - Walmart: 8-9 digit number (e.g., "123456789")
+    - DHgate: product name slug (e.g., "iphone-case-protective")
+    - Banggood: 7 digit number (e.g., "1234567")
 
 For EACH of the 10 products provide:
-- image_url: Direct product image URL (use generic placeholder if needed like https://via.placeholder.com/150)
-- product_name: Exact product title from platform
-- product_url: Direct link to product page (use generic/searchable URL format)
+- product_id: The product ID/ASIN/item number specific to the platform
+- product_name: Exact product title (make it realistic for the platform)
 - price: Current price in USD (number with 2 decimals)
-- platform: Platform name (AliExpress, Amazon, eBay, etc.)
+- platform: Platform name (AliExpress, Amazon, eBay, Walmart, DHgate, Banggood)
 - rating: Product rating (must be >= 4.5)
 - reviews_count: Number of reviews (prefer 100+)
 - shipping_info: Shipping time estimate (e.g., "2-5 days", "Free shipping")
@@ -323,14 +322,13 @@ Output format:
 {
   "products": [
     {
-      "image_url": "https://example.com/image.jpg",
-      "product_name": "Product Name",
-      "product_url": "https://platform.com/product",
-      "price": 29.99,
-      "platform": "AliExpress",
-      "rating": 4.8,
-      "reviews_count": 1500,
-      "shipping_info": "Free shipping, 3-7 days"
+      "product_id": "B08N5WRWNW",
+      "product_name": "Spigen Tough Armor Case for iPhone 17 Pro Max",
+      "price": 44.99,
+      "platform": "Amazon",
+      "rating": 4.7,
+      "reviews_count": 12300,
+      "shipping_info": "Free shipping, 2-day delivery"
     }
   ]
 }`;

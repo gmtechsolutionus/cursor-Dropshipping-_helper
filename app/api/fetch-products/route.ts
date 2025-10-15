@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { generateTopRatedProducts } from '@/lib/xai';
+import { generateMockTopRatedProducts } from '@/lib/mock-products';
 
 export const runtime = 'edge';
 
@@ -14,11 +15,20 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Call xAI API to fetch top-rated products
-    const productsResult = await generateTopRatedProducts(productName);
-
-    if (!productsResult) {
-      throw new Error('Failed to get products from xAI');
+    // Check if API key is available
+    const apiKey = process.env.XAI_API_KEY || process.env.NEXT_PUBLIC_XAI_API_KEY;
+    
+    let productsResult: string;
+    if (!apiKey) {
+      console.warn('No XAI API key found, using mock data');
+      productsResult = generateMockTopRatedProducts(productName);
+    } else {
+      // Call xAI API to fetch top-rated products
+      productsResult = await generateTopRatedProducts(productName);
+      
+      if (!productsResult || productsResult === '') {
+        throw new Error('Failed to get products from xAI');
+      }
     }
 
     // Parse the JSON response
@@ -106,6 +116,39 @@ export async function POST(request: NextRequest) {
       }
     };
 
+    // Build product URL from product ID
+    const buildProductUrl = (platformKey: string, productId: string | undefined, productName: string) => {
+      if (!productId) {
+        return buildSearchUrl(platformKey, productName);
+      }
+
+      switch (platformKey) {
+        case 'aliexpress':
+          // AliExpress item URLs
+          return `https://www.aliexpress.com/item/${productId}.html`;
+        case 'amazon':
+          // Amazon ASIN URLs
+          return `https://www.amazon.com/dp/${productId}`;
+        case 'ebay':
+          // eBay item URLs
+          return `https://www.ebay.com/itm/${productId}`;
+        case 'walmart':
+          // Walmart item URLs
+          return `https://www.walmart.com/ip/product/${productId}`;
+        case 'dhgate':
+          // DHgate uses slugs in URLs
+          return `https://www.dhgate.com/product/${productId}.html`;
+        case 'banggood':
+          // Banggood product URLs
+          return `https://www.banggood.com/product-p-${productId}.html`;
+        case 'alibaba':
+          // Alibaba product URLs
+          return `https://www.alibaba.com/product-detail/${productId}.html`;
+        default:
+          return buildSearchUrl(platformKey, productName);
+      }
+    };
+
     // Utility to extract OG/Twitter image from HTML
     const extractImageFromHtml = (html: string): string | null => {
       const ogMatch = html.match(/<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)["'][^>]*>/i);
@@ -156,10 +199,21 @@ export async function POST(request: NextRequest) {
       const processed = await Promise.all(
         productsData.products.map(async (p: any) => {
           const platformKey = normalizePlatform(p.platform);
-          const hasValidUrl = isValidProductUrlForPlatform(platformKey, p.product_url);
-          const safeProductUrl = hasValidUrl
-            ? p.product_url
-            : buildSearchUrl(platformKey, p.product_name || productName);
+          
+          // First, try to build URL from product_id if available
+          let safeProductUrl: string;
+          if (p.product_id) {
+            safeProductUrl = buildProductUrl(platformKey, p.product_id, p.product_name || productName);
+          } else if (p.product_url) {
+            // Fallback to checking if provided URL is valid
+            const hasValidUrl = isValidProductUrlForPlatform(platformKey, p.product_url);
+            safeProductUrl = hasValidUrl
+              ? p.product_url
+              : buildSearchUrl(platformKey, p.product_name || productName);
+          } else {
+            // Last resort: build search URL
+            safeProductUrl = buildSearchUrl(platformKey, p.product_name || productName);
+          }
 
           let imageUrl: string | null = null;
           // 1) If provided image looks valid and loads, use it
