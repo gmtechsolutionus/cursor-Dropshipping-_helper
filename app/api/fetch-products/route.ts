@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { generateTopRatedProducts } from '@/lib/xai';
+import { validateAndReplaceUrl } from '@/lib/url-validator';
 
 export const runtime = 'edge';
 
@@ -156,10 +157,41 @@ export async function POST(request: NextRequest) {
       const processed = await Promise.all(
         productsData.products.map(async (p: any) => {
           const platformKey = normalizePlatform(p.platform);
-          const hasValidUrl = isValidProductUrlForPlatform(platformKey, p.product_url);
-          const safeProductUrl = hasValidUrl
-            ? p.product_url
-            : buildSearchUrl(platformKey, p.product_name || productName);
+          
+          // Validate and replace URL if needed
+          let urlValidation;
+          let finalUrl = p.product_url;
+          let urlStatus: 'valid' | 'replaced' | 'invalid' = 'valid';
+          let originalUrl: string | undefined;
+
+          try {
+            // First check if URL format is valid
+            const hasValidFormat = isValidProductUrlForPlatform(platformKey, p.product_url);
+            
+            if (!hasValidFormat) {
+              // Invalid format, use search URL
+              finalUrl = buildSearchUrl(platformKey, p.product_name || productName);
+              urlStatus = 'replaced';
+              originalUrl = p.product_url;
+            } else {
+              // Format is valid, now validate accessibility
+              urlValidation = await validateAndReplaceUrl(
+                p.product_url,
+                platformKey,
+                p.product_name || productName,
+                3000 // 3 second timeout for faster response
+              );
+              finalUrl = urlValidation.finalUrl;
+              urlStatus = urlValidation.status;
+              originalUrl = urlValidation.originalUrl;
+            }
+          } catch (error) {
+            console.error('Error validating URL:', error);
+            // Fallback to search URL on error
+            finalUrl = buildSearchUrl(platformKey, p.product_name || productName);
+            urlStatus = 'replaced';
+            originalUrl = p.product_url;
+          }
 
           let imageUrl: string | null = null;
           // 1) If provided image looks valid and loads, use it
@@ -167,13 +199,16 @@ export async function POST(request: NextRequest) {
             imageUrl = await ensureLiveImage(p.image_url);
           }
           // 2) Otherwise, try to extract OG image from the product page
-          if (!imageUrl) {
-            imageUrl = await tryFetchOgImage(safeProductUrl);
+          if (!imageUrl && urlStatus === 'valid') {
+            imageUrl = await tryFetchOgImage(finalUrl);
           }
 
           return {
             ...p,
-            product_url: safeProductUrl,
+            product_url: finalUrl,
+            url_status: urlStatus,
+            original_url: originalUrl,
+            last_validated: new Date().toISOString(),
             image_url: imageUrl || 'https://via.placeholder.com/300?text=Product',
           };
         })

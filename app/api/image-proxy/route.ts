@@ -4,8 +4,11 @@ export const runtime = 'edge';
 
 export async function GET(req: NextRequest) {
   const url = req.nextUrl.searchParams.get('url');
-  if (!url) {
-    return new NextResponse('Missing url', { status: 400 });
+  const src = req.nextUrl.searchParams.get('src'); // Support both 'url' and 'src' params
+  
+  const imageUrl = url || src;
+  if (!imageUrl) {
+    return new NextResponse('Missing url or src parameter', { status: 400 });
   }
 
   const fetchRemote = async (remoteUrl: string) => {
@@ -21,7 +24,7 @@ export async function GET(req: NextRequest) {
 
   try {
     // 1) Try direct image fetch first
-    let resp = await fetchRemote(url);
+    let resp = await fetchRemote(imageUrl);
 
     const contentType = resp.headers.get('content-type') || '';
     if (resp.ok && resp.body && contentType.startsWith('image/')) {

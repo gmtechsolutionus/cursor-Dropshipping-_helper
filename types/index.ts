@@ -69,6 +69,9 @@ export interface TopRatedProduct {
   rating: number;
   reviews_count: number;
   shipping_info?: string;
+  url_status?: 'valid' | 'replaced' | 'invalid';
+  original_url?: string;
+  last_validated?: string;
 }
 
 export interface PriceComparison {
