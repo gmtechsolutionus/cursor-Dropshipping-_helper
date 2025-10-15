@@ -106,15 +106,80 @@ export async function POST(request: NextRequest) {
       }
     };
 
+    // Utility to extract OG/Twitter image from HTML
+    const extractImageFromHtml = (html: string): string | null => {
+      const ogMatch = html.match(/<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)["'][^>]*>/i);
+      if (ogMatch?.[1]) return ogMatch[1];
+      const twMatch = html.match(/<meta[^>]+name=["']twitter:image["'][^>]+content=["']([^"']+)["'][^>]*>/i);
+      if (twMatch?.[1]) return twMatch[1];
+      return null;
+    };
+
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 5000);
+
+    const ensureLiveImage = async (urlString: string | undefined): Promise<string | null> => {
+      if (!urlString) return null;
+      try {
+        const res = await fetch(urlString, {
+          method: 'HEAD',
+          signal: controller.signal,
+        });
+        if (res.ok) return urlString;
+      } catch (_) {
+        // ignore and fallback
+      }
+      return null;
+    };
+
+    const tryFetchOgImage = async (pageUrl: string | undefined): Promise<string | null> => {
+      if (!pageUrl) return null;
+      try {
+        const htmlRes = await fetch(pageUrl, {
+          headers: { 'accept': 'text/html' },
+          signal: controller.signal,
+        });
+        if (!htmlRes.ok) return null;
+        const html = await htmlRes.text();
+        const found = extractImageFromHtml(html);
+        if (found) {
+          const ok = await ensureLiveImage(found);
+          if (ok) return ok;
+        }
+      } catch (_) {
+        // ignore and fallback
+      }
+      return null;
+    };
+
     if (Array.isArray(productsData?.products)) {
-      productsData.products = productsData.products.map((p: any) => {
-        const platformKey = normalizePlatform(p.platform);
-        const hasValidUrl = isValidProductUrlForPlatform(platformKey, p.product_url);
-        return {
-          ...p,
-          product_url: hasValidUrl ? p.product_url : buildSearchUrl(platformKey, p.product_name || productName),
-        };
-      });
+      const processed = await Promise.all(
+        productsData.products.map(async (p: any) => {
+          const platformKey = normalizePlatform(p.platform);
+          const hasValidUrl = isValidProductUrlForPlatform(platformKey, p.product_url);
+          const safeProductUrl = hasValidUrl
+            ? p.product_url
+            : buildSearchUrl(platformKey, p.product_name || productName);
+
+          let imageUrl: string | null = null;
+          // 1) If provided image looks valid and loads, use it
+          if (typeof p.image_url === 'string' && /^https?:\/\//i.test(p.image_url)) {
+            imageUrl = await ensureLiveImage(p.image_url);
+          }
+          // 2) Otherwise, try to extract OG image from the product page
+          if (!imageUrl) {
+            imageUrl = await tryFetchOgImage(safeProductUrl);
+          }
+
+          return {
+            ...p,
+            product_url: safeProductUrl,
+            image_url: imageUrl || 'https://via.placeholder.com/300?text=Product',
+          };
+        })
+      );
+      clearTimeout(timeoutId);
+      productsData.products = processed;
     }
 
     return NextResponse.json(productsData);

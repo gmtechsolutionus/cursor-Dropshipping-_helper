@@ -293,13 +293,69 @@ export function ProductAnalysisDisplay({ analysis }: ProductAnalysisDisplayProps
         </div>
       </div>
 
-      {/* Advanced Analysis Tools - Moved to Top */}
+      {/* Advanced Analysis Tools - Top Section */}
       <Card>
         <CardHeader>
           <CardTitle className="heading-gradient">{t.additionalTools}</CardTitle>
           <CardDescription>Get deeper insights into your product</CardDescription>
         </CardHeader>
         <CardContent>
+          {/* Top-Rated Products FIRST under Advanced Analysis Tools */}
+          {topRatedProducts && topRatedProducts.products && topRatedProducts.products.length > 0 && (
+            <div className="mb-6">
+              <h3 className="text-xl font-semibold mb-2">⭐ {t.topRatedProducts}</h3>
+              <p className="text-sm text-muted-foreground mb-4">{t.topRatedProductsDesc}</p>
+              {/* Single column layout, smaller image */}
+              <div className="grid grid-cols-1 gap-4">
+                {topRatedProducts.products.map((product: any, index: number) => (
+                  <a
+                    key={index}
+                    href={product.product_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="border rounded-lg overflow-hidden hover:shadow-lg transition-shadow bg-card"
+                  >
+                    <div className="flex gap-3 p-3">
+                      <div className="relative shrink-0 h-36 w-36 bg-gray-100 dark:bg-gray-800 rounded-md overflow-hidden">
+                        <img
+                          src={product.image_url ? `/api/image-proxy?url=${encodeURIComponent(product.image_url)}` : 'https://via.placeholder.com/300?text=No+Image'}
+                          alt={product.product_name}
+                          className="absolute inset-0 w-full h-full object-contain"
+                          loading="lazy"
+                          referrerPolicy="no-referrer"
+                          onError={(e) => {
+                            e.currentTarget.src = 'https://via.placeholder.com/300?text=No+Image';
+                          }}
+                        />
+                      </div>
+                      <div className="flex-1 space-y-2">
+                        <h4 className="font-medium text-sm line-clamp-2 hover:text-primary">{product.product_name}</h4>
+                        <div className="flex items-center justify-between">
+                          <p className="text-lg font-semibold text-primary">$
+                            {typeof product.price === 'number' ? product.price.toFixed(2) : product.price}
+                          </p>
+                          <Badge variant="secondary" className="text-xs">{product.platform}</Badge>
+                        </div>
+                        <div className="flex items-center justify-between text-xs">
+                          <div className="flex items-center gap-1">
+                            <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
+                            <span>{product.rating} ({(product.reviews_count / 1000).toFixed(1)}k)</span>
+                          </div>
+                          {product.shipping_info && (
+                            <span className="text-muted-foreground truncate">
+                              {product.shipping_info.includes('Free') ? '📦 ' + t.freeShipping : product.shipping_info}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </a>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Action buttons for tools */}
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
             <Button
               onClick={handleFetchTopProducts}
@@ -353,54 +409,6 @@ export function ProductAnalysisDisplay({ analysis }: ProductAnalysisDisplayProps
 
           {/* Inline Results Panel */}
           <div className="mt-6 space-y-6">
-            {/* Top-Rated Products Inline */}
-            {topRatedProducts && topRatedProducts.products && topRatedProducts.products.length > 0 && (
-              <div>
-                <h3 className="text-xl font-semibold mb-2">⭐ {t.topRatedProducts}</h3>
-                <p className="text-sm text-muted-foreground mb-4">{t.topRatedProductsDesc}</p>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
-                  {topRatedProducts.products.map((product: any, index: number) => (
-                    <a
-                      key={index}
-                      href={product.product_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="border rounded-lg overflow-hidden hover:shadow-lg transition-shadow bg-card"
-                    >
-                      <div className="aspect-square relative bg-gray-100 dark:bg-gray-800">
-                        <img
-                          src={product.image_url || 'https://via.placeholder.com/150'}
-                          alt={product.product_name}
-                          className="w-full h-full object-cover"
-                          onError={(e) => {
-                            e.currentTarget.src = 'https://via.placeholder.com/150?text=Product';
-                          }}
-                        />
-                      </div>
-                      <div className="p-3 space-y-2">
-                        <h4 className="font-medium text-sm line-clamp-2 hover:text-primary">{product.product_name}</h4>
-                        <div className="flex items-center justify-between">
-                          <p className="text-xl font-bold text-primary">${product.price.toFixed(2)}</p>
-                          <Badge variant="secondary" className="text-xs">{product.platform}</Badge>
-                        </div>
-                        <div className="flex items-center justify-between text-xs">
-                          <div className="flex items-center gap-1">
-                            <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
-                            <span>{product.rating} ({(product.reviews_count / 1000).toFixed(1)}k)</span>
-                          </div>
-                          {product.shipping_info && (
-                            <span className="text-muted-foreground truncate">
-                              {product.shipping_info.includes('Free') ? '📦 ' + t.freeShipping : product.shipping_info}
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                    </a>
-                  ))}
-                </div>
-              </div>
-            )}
-
             {/* Other Analyses Inline via Tabs */}
             {(priceComparison || supplierVerification || shippingEstimate || reviewSummary || seoDescription || competitorAnalysis) && (
               <Tabs defaultValue="price" className="w-full">

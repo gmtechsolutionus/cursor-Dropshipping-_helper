@@ -55,6 +55,7 @@
   }
   body {
     @apply bg-background text-foreground antialiased;
+    font-feature-settings: "ss01" on, "cv11" on;
   }
 }
 
@@ -62,5 +63,8 @@
 @layer utilities {
   .heading-gradient {
     @apply bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-500;
+  }
+  .btn-modern {
+    @apply rounded-xl shadow-sm hover:shadow-md transition-shadow;
   }
 }
