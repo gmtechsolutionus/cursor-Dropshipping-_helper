@@ -318,9 +318,13 @@ export function ProductAnalysisDisplay({ analysis }: ProductAnalysisDisplayProps
                     <div className="flex gap-3 p-3">
                       <div className="relative shrink-0 h-36 w-36 bg-gray-100 dark:bg-gray-800 rounded-md overflow-hidden">
                         <img
-                          src={product.image_url || 'https://via.placeholder.com/150'}
+                          src={product.image_url ? `/api/image-proxy?url=${encodeURIComponent(
+                            product.image_url
+                          )}` : 'https://via.placeholder.com/150'}
                           alt={product.product_name}
                           className="absolute inset-0 w-full h-full object-contain"
+                          loading="lazy"
+                          referrerPolicy="no-referrer"
                           onError={(e) => {
                             e.currentTarget.src = 'https://via.placeholder.com/150?text=Product';
                           }}
@@ -329,7 +333,9 @@ export function ProductAnalysisDisplay({ analysis }: ProductAnalysisDisplayProps
                       <div className="flex-1 space-y-2">
                         <h4 className="font-medium text-sm line-clamp-2 hover:text-primary">{product.product_name}</h4>
                         <div className="flex items-center justify-between">
-                          <p className="text-lg font-semibold text-primary">${product.price.toFixed(2)}</p>
+                          <p className="text-lg font-semibold text-primary">$
+                            {typeof product.price === 'number' ? product.price.toFixed(2) : product.price}
+                          </p>
                           <Badge variant="secondary" className="text-xs">{product.platform}</Badge>
                         </div>
                         <div className="flex items-center justify-between text-xs">
