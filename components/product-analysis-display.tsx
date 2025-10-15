@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
-import { Download, ExternalLink, Package, TrendingUp, Shield, Truck, Star, Search, FileText, Copy } from 'lucide-react';
+import { Download, ExternalLink, Package, TrendingUp, Shield, Truck, Star, Search, FileText, Copy, RefreshCw, CheckCircle, AlertTriangle } from 'lucide-react';
 import toast from 'react-hot-toast';
 import jsPDF from 'jspdf';
 import Papa from 'papaparse';
@@ -190,6 +190,36 @@ export function ProductAnalysisDisplay({ analysis }: ProductAnalysisDisplayProps
     }
   };
 
+  const handleValidateLinks = async () => {
+    if (!topRatedProducts?.products) return;
+    
+    setLoadingStates(prev => ({ ...prev, validateLinks: true }));
+    try {
+      const response = await fetch('/api/validate-product-urls', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          products: topRatedProducts.products
+        })
+      });
+      
+      if (!response.ok) throw new Error('Failed to validate links');
+      const data = await response.json();
+      
+      // Update products with validation results
+      setTopRatedProducts((prev: any) => ({
+        ...prev,
+        products: data.products
+      }));
+      
+      toast.success(t.linkValidated + ` (${data.summary.valid} valid, ${data.summary.replaced} replaced, ${data.summary.invalid} invalid)`);
+    } catch (error) {
+      toast.error(t.linkValidationFailed);
+    } finally {
+      setLoadingStates(prev => ({ ...prev, validateLinks: false }));
+    }
+  };
+
   const exportToPDF = () => {
     const doc = new jsPDF();
     let yPosition = 20;
@@ -303,10 +333,24 @@ export function ProductAnalysisDisplay({ analysis }: ProductAnalysisDisplayProps
           {/* Top-Rated Products FIRST under Advanced Analysis Tools */}
           {topRatedProducts && topRatedProducts.products && topRatedProducts.products.length > 0 && (
             <div className="mb-6">
-              <h3 className="text-xl font-semibold mb-2">⭐ {t.topRatedProducts}</h3>
-              <p className="text-sm text-muted-foreground mb-4">{t.topRatedProductsDesc}</p>
+              <div className="flex items-center justify-between mb-2">
+                <div>
+                  <h3 className="text-xl font-semibold">⭐ {t.topRatedProducts}</h3>
+                  <p className="text-sm text-muted-foreground mt-1">{t.topRatedProductsDesc}</p>
+                </div>
+                <Button
+                  onClick={handleValidateLinks}
+                  disabled={loadingStates.validateLinks}
+                  variant="outline"
+                  size="sm"
+                  className="flex items-center gap-2"
+                >
+                  <RefreshCw className={`h-4 w-4 ${loadingStates.validateLinks ? 'animate-spin' : ''}`} />
+                  {loadingStates.validateLinks ? t.validatingLinks : t.validateLinks}
+                </Button>
+              </div>
               {/* Single column layout, smaller image */}
-              <div className="grid grid-cols-1 gap-4">
+              <div className="grid grid-cols-1 gap-4 mt-4">
                 {topRatedProducts.products.map((product: any, index: number) => (
                   <a
                     key={index}
@@ -329,7 +373,28 @@ export function ProductAnalysisDisplay({ analysis }: ProductAnalysisDisplayProps
                         />
                       </div>
                       <div className="flex-1 space-y-2">
-                        <h4 className="font-medium text-sm line-clamp-2 hover:text-primary">{product.product_name}</h4>
+                        <div className="flex items-start justify-between gap-2">
+                          <h4 className="font-medium text-sm line-clamp-2 hover:text-primary">{product.product_name}</h4>
+                          {product.url_status && (
+                            <div className="flex items-center gap-1 shrink-0">
+                              {product.url_status === 'valid' && (
+                                <div className="flex items-center gap-1 text-green-600" title={t.linkValid}>
+                                  <CheckCircle className="h-4 w-4" />
+                                </div>
+                              )}
+                              {product.url_status === 'replaced' && (
+                                <div className="flex items-center gap-1 text-blue-600" title={t.linkReplaced}>
+                                  <RefreshCw className="h-4 w-4" />
+                                </div>
+                              )}
+                              {product.url_status === 'invalid' && (
+                                <div className="flex items-center gap-1 text-red-600" title={t.linkInvalid}>
+                                  <AlertTriangle className="h-4 w-4" />
+                                </div>
+                              )}
+                            </div>
+                          )}
+                        </div>
                         <div className="flex items-center justify-between">
                           <p className="text-lg font-semibold text-primary">$
                             {typeof product.price === 'number' ? product.price.toFixed(2) : product.price}
@@ -347,6 +412,11 @@ export function ProductAnalysisDisplay({ analysis }: ProductAnalysisDisplayProps
                             </span>
                           )}
                         </div>
+                        {product.url_status === 'replaced' && product.original_url && (
+                          <div className="text-xs text-muted-foreground border-t pt-2">
+                            <span className="font-medium">Note:</span> Original link was unavailable, showing platform search instead
+                          </div>
+                        )}
                       </div>
                     </div>
                   </a>

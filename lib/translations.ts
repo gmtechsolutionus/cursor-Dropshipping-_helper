@@ -107,6 +107,13 @@ export const translations = {
     fetchingProducts: "Fetching products...",
     noProducts: "No products found",
     freeShipping: "Free shipping",
+    validateLinks: "Validate Links",
+    validatingLinks: "Validating...",
+    linkValid: "Link verified",
+    linkReplaced: "Updated link (auto-validated)",
+    linkInvalid: "Link unavailable",
+    linkValidated: "Links validated successfully!",
+    linkValidationFailed: "Failed to validate links",
     
     // Messages
     uploadSuccess: "Product analyzed successfully!",
@@ -224,6 +231,13 @@ export const translations = {
     fetchingProducts: "正在获取产品...",
     noProducts: "未找到产品",
     freeShipping: "包邮",
+    validateLinks: "验证链接",
+    validatingLinks: "正在验证...",
+    linkValid: "链接已验证",
+    linkReplaced: "已更新链接（自动验证）",
+    linkInvalid: "链接不可用",
+    linkValidated: "链接验证成功！",
+    linkValidationFailed: "链接验证失败",
     
     // Messages
     uploadSuccess: "产品分析成功！",
