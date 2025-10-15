@@ -318,7 +318,11 @@ export function ProductAnalysisDisplay({ analysis }: ProductAnalysisDisplayProps
                     <div className="flex gap-3 p-3">
                       <div className="relative shrink-0 h-36 w-36 bg-gray-100 dark:bg-gray-800 rounded-md overflow-hidden">
                         <img
-                          src={product.image_url ? `/api/image-proxy?url=${encodeURIComponent(product.image_url)}` : 'https://via.placeholder.com/300?text=No+Image'}
+                          src={`/api/image-proxy?url=${encodeURIComponent(
+                            (product.image_url && !/placeholder\.com/.test(product.image_url))
+                              ? product.image_url
+                              : (product.product_url || '')
+                          )}`}
                           alt={product.product_name}
                           className="absolute inset-0 w-full h-full object-contain"
                           loading="lazy"
