@@ -152,10 +152,10 @@ IMPORTANT: You must respond with ONLY a valid JSON object. Do not include any ma
     max_tokens: 4096,
   });
 
-  return response.choices[0].message.content;
+  return response.choices[0].message.content || '';
 }
 
-export async function generateWithGrok(prompt: string) {
+export async function generateWithGrok(prompt: string): Promise<string> {
   const xai = getXAIClient();
   const response = await xai.chat.completions.create({
     model: 'grok-2-latest',
@@ -169,7 +169,7 @@ export async function generateWithGrok(prompt: string) {
     max_tokens: 4096,
   });
 
-  return response.choices[0].message.content;
+  return response.choices[0].message.content || '';
 }
 
 export async function analyzeProductByName(productName: string) {

@@ -26,7 +26,7 @@ export async function POST(request: NextRequest) {
       // Call xAI API to fetch top-rated products
       productsResult = await generateTopRatedProducts(productName);
       
-      if (!productsResult) {
+      if (!productsResult || productsResult === '') {
         throw new Error('Failed to get products from xAI');
       }
     }
