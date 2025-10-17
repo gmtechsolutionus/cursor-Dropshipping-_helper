@@ -42,9 +42,9 @@ export function ProductInput({ onAnalyze, isAnalyzing }: ProductInputProps) {
   };
 
   return (
-    <Card>
+    <Card className="neon-border">
       <CardHeader>
-        <CardTitle>{t.analyzeProduct}</CardTitle>
+        <CardTitle className="font-heading">{t.analyzeProduct}</CardTitle>
         <CardDescription>
           {t.uploadImage} {t.orEnterName}
         </CardDescription>
@@ -72,7 +72,7 @@ export function ProductInput({ onAnalyze, isAnalyzing }: ProductInputProps) {
               <Button 
                 onClick={handleImageAnalyze}
                 disabled={isAnalyzing}
-                className="w-full"
+                className="w-full btn-modern"
                 size="lg"
               >
                 <Sparkles className="w-4 h-4 mr-2" />
@@ -101,7 +101,7 @@ export function ProductInput({ onAnalyze, isAnalyzing }: ProductInputProps) {
             <Button 
               onClick={handleTextAnalyze}
               disabled={!productName.trim() || isAnalyzing}
-              className="w-full"
+              className="w-full btn-modern"
               size="lg"
             >
               <Sparkles className="w-4 h-4 mr-2" />

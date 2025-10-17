@@ -43,7 +43,7 @@ export function ImageUpload({ onImageUpload, isUploading, selectedFile }: ImageU
 
   if (localFile) {
     return (
-      <div className="relative border-2 border-solid border-primary rounded-lg p-8 bg-primary/5">
+      <div className="relative border-2 border-solid border-primary rounded-2xl p-8 bg-primary/5 glass">
         <Button
           variant="ghost"
           size="icon"
@@ -69,7 +69,7 @@ export function ImageUpload({ onImageUpload, isUploading, selectedFile }: ImageU
     <div
       {...getRootProps()}
       className={cn(
-        "relative border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors",
+        "relative border-2 border-dashed rounded-2xl p-10 text-center cursor-pointer transition-colors glass",
         isDragActive ? "border-primary bg-primary/5" : "border-gray-300 hover:border-gray-400",
         isUploading && "opacity-50 cursor-not-allowed"
       )}
@@ -77,7 +77,7 @@ export function ImageUpload({ onImageUpload, isUploading, selectedFile }: ImageU
       <input {...getInputProps()} />
       
       <div className="flex flex-col items-center space-y-4">
-        <Upload className="w-12 h-12 text-gray-400" />
+        <Upload className="w-12 h-12 text-primary" />
         <div>
           <p className="text-sm font-medium">
             {isDragActive ? "Drop the image here" : "Drag & drop an image here"}
