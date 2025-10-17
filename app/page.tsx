@@ -98,60 +98,110 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-background">
-      <header className="border-b">
-        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <h1 className="text-2xl font-bold">{t.appTitle}</h1>
-          <div className="flex items-center gap-2">
-            <LanguageSwitcher />
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-            >
-              <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-              <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-            </Button>
-          </div>
-        </div>
-      </header>
-
-      <main className="container mx-auto px-4 py-8">
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="analyze">{t.analyzeProduct}</TabsTrigger>
-            <TabsTrigger value="results" disabled={!productAnalysis}>
-              {t.results}
-            </TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="analyze" className="space-y-6">
-            <ProductInput 
-              onAnalyze={handleProductAnalyze} 
-              isAnalyzing={isAnalyzing} 
-            />
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {features.map((feature, index) => (
-                <Card key={index}>
-                  <CardHeader>
-                    <div className="flex items-center space-x-2">
-                      <feature.icon className="h-5 w-5 text-primary" />
-                      <CardTitle className="text-lg">{feature.title}</CardTitle>
-                    </div>
-                    <CardDescription>{feature.description}</CardDescription>
-                  </CardHeader>
-                </Card>
-              ))}
+      {/* App chrome */}
+      <div className="sticky top-0 z-40">
+        <header className="glass border-b">
+          <div className="container mx-auto px-4 py-4 flex justify-between items-center">
+            <div className="flex items-center gap-3">
+              <div className="h-8 w-8 rounded-xl bg-gradient-to-br from-primary via-fuchsia-500 to-cyan-400" />
+              <h1 className="text-2xl font-extrabold tracking-tight heading-gradient font-heading">{t.appTitle}</h1>
             </div>
-          </TabsContent>
+            <div className="flex items-center gap-2">
+              <LanguageSwitcher />
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                className="btn-modern"
+                aria-label="Toggle theme"
+              >
+                <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+                <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+              </Button>
+            </div>
+          </div>
+        </header>
+        <div className="h-[1px] w-full bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
+      </div>
 
-          <TabsContent value="results">
-            {productAnalysis && (
-              <ProductAnalysisDisplay analysis={productAnalysis} />
-            )}
-          </TabsContent>
-        </Tabs>
+      {/* Main content */}
+      <main className="container mx-auto px-4 py-10">
+        <div className="grid grid-cols-1 lg:grid-cols-[280px_minmax(0,1fr)] gap-6">
+          {/* Sidebar */}
+          <aside className="hidden lg:block">
+            <div className="glass rounded-2xl p-4 sticky top-20">
+              <div className="space-y-2">
+                <div className="text-xs uppercase tracking-wider text-muted-foreground">Quick Tools</div>
+                <div className="grid gap-2">
+                  <Button variant="outline" className="justify-start btn-modern"><Search className="h-4 w-4 mr-2" />{t.generateSEO}</Button>
+                  <Button variant="outline" className="justify-start btn-modern"><TrendingUp className="h-4 w-4 mr-2" />{t.comparePrice}</Button>
+                  <Button variant="outline" className="justify-start btn-modern"><Shield className="h-4 w-4 mr-2" />{t.verifySupplier}</Button>
+                  <Button variant="outline" className="justify-start btn-modern"><Truck className="h-4 w-4 mr-2" />{t.calcShipping}</Button>
+                </div>
+              </div>
+            </div>
+          </aside>
+
+          {/* Content */}
+          <section className="min-w-0">
+            <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
+              <TabsList className="grid w-full grid-cols-2">
+                <TabsTrigger value="analyze">{t.analyzeProduct}</TabsTrigger>
+                <TabsTrigger value="results" disabled={!productAnalysis}>
+                  {t.results}
+                </TabsTrigger>
+              </TabsList>
+
+              <TabsContent value="analyze" className="space-y-6">
+                <Card className="neon-border">
+                  <CardHeader>
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <CardTitle className="text-xl font-heading">AI Product Intelligence</CardTitle>
+                        <CardDescription>Analyze by image or name to unlock insights</CardDescription>
+                      </div>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <ProductInput 
+                      onAnalyze={handleProductAnalyze} 
+                      isAnalyzing={isAnalyzing} 
+                    />
+                  </CardContent>
+                </Card>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {features.map((feature, index) => (
+                    <Card key={index} className="hover:translate-y-[-2px] transition-transform">
+                      <CardHeader>
+                        <div className="flex items-center space-x-2">
+                          <feature.icon className="h-5 w-5 text-primary" />
+                          <CardTitle className="text-lg font-heading">{feature.title}</CardTitle>
+                        </div>
+                        <CardDescription>{feature.description}</CardDescription>
+                      </CardHeader>
+                    </Card>
+                  ))}
+                </div>
+              </TabsContent>
+
+              <TabsContent value="results">
+                {productAnalysis && (
+                  <ProductAnalysisDisplay analysis={productAnalysis} />
+                )}
+              </TabsContent>
+            </Tabs>
+          </section>
+        </div>
       </main>
+
+      {/* Footer */}
+      <footer className="border-t py-6">
+        <div className="container mx-auto px-4 text-xs text-muted-foreground flex justify-between">
+          <span>© {new Date().getFullYear()} Dropshipping Helper</span>
+          <span>Built with next@15, React 19, Tailwind</span>
+        </div>
+      </footer>
     </div>
   );
 }
